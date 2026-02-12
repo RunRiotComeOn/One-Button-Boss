@@ -64,11 +64,11 @@ export class Player {
     
     // 创建玩家精灵
     this.sprite = scene.physics.add.sprite(x, y, 'player-pixel');
-    this.sprite.setDisplaySize(16, 16);
+    this.sprite.setDisplaySize(20, 20);
     this.sprite.setTint(0x00ffc8);
-    
-    // 添加发光滤镜效果
-    this.sprite.setBlendMode((window as any).Phaser.BlendModes.ADD);
+
+    // 使用SCREEN混合模式 - 比ADD更亮
+    this.sprite.setBlendMode((window as any).Phaser.BlendModes.SCREEN);
     
     // 物理设置 - 使用矩形碰撞
     this.sprite.setSize(12, 12);
@@ -227,8 +227,8 @@ export class Player {
   }
   
   updateGlow(_delta: number) {
-    // 脉冲发光效果
-    const pulse = Math.sin(this.scene.time.now / 200) * 0.15 + 0.85;
+    // 脉冲发光效果 - 始终保持高亮，脉冲更明显
+    const pulse = Math.sin(this.scene.time.now / 300) * 0.1 + 1.0;
     this.sprite.setAlpha(pulse);
     
     // 冲刺冷却时闪烁
