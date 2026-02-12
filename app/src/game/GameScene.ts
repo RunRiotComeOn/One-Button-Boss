@@ -125,16 +125,19 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.spaceKey = this.input.keyboard.addKey((window as any).Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.mousePointer = this.input.activePointer;
     
+    // 创建背景效果（必须在玩家和Boss之前，否则会遮挡）
+    this.createBackground();
+
     // 创建子弹池
     this.bulletPool = new BulletPool(this, 500);
-    
+
     // 创建玩家
     this.player = new Player(
       this,
       this.scale.width / 2,
       this.scale.height * 0.8
     );
-    
+
     // 创建 Boss
     this.boss = new Boss(
       this,
@@ -142,12 +145,9 @@ export class GameScene extends (window as any).Phaser.Scene {
       this.scale.height / 4,
       this.bulletPool
     );
-    
+
     // 设置碰撞
     this.setupCollisions();
-    
-    // 创建背景效果
-    this.createBackground();
     
     // 重置状态
     this.resetGame();
