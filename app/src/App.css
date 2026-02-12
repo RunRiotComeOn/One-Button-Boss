@@ -1,0 +1,241 @@
+/* Pixel Art Game Styles */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+#root {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #0a0a0f;
+}
+
+/* Pixel Font */
+.font-pixel {
+  font-family: 'Press Start 2P', monospace;
+}
+
+/* Custom scrollbar - Pixel style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0f;
+  border: 2px solid #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00ffc8;
+  border: 2px solid #0a0a0f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff0066;
+}
+
+/* Pixel-perfect rendering */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Neon glow effects */
+.neon-text {
+  text-shadow: 
+    0 0 5px currentColor,
+    0 0 10px currentColor,
+    0 0 20px currentColor;
+}
+
+.neon-border {
+  box-shadow: 
+    0 0 5px currentColor,
+    inset 0 0 5px currentColor;
+}
+
+/* Animation keyframes */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pixel-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+@keyframes scanline {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* CRT Scanline effect */
+.crt-scanlines::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.3) 2px,
+    rgba(0, 0, 0, 0.3) 4px
+  );
+  pointer-events: none;
+  z-index: 100;
+  animation: scanline 8s linear infinite;
+}
+
+/* Static CRT overlay */
+.crt-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 99;
+}
+
+/* CRT vignette effect */
+.crt-vignette::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  pointer-events: none;
+  z-index: 98;
+}
+
+/* Pixel button hover */
+.btn-pixel:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 currentColor;
+}
+
+/* Selection colors */
+::selection {
+  background: rgba(0, 255, 200, 0.3);
+  color: white;
+}
+
+/* Focus styles - Pixel */
+:focus-visible {
+  outline: 2px solid #00ffc8;
+  outline-offset: 2px;
+}
+
+/* Disable text selection on game elements */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Canvas container */
+.canvas-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.canvas-container canvas {
+  box-shadow: 
+    0 0 20px rgba(0, 255, 200, 0.3),
+    0 0 40px rgba(0, 255, 200, 0.1);
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Pixel border utility */
+.pixel-border {
+  border: 2px solid;
+  box-shadow: 
+    4px 4px 0 rgba(0, 0, 0, 0.5),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.1);
+}
+
+/* Glow effects for different colors */
+.glow-cyan {
+  box-shadow: 0 0 10px #00ffc8, 0 0 20px rgba(0, 255, 200, 0.5);
+}
+
+.glow-pink {
+  box-shadow: 0 0 10px #ff0066, 0 0 20px rgba(255, 0, 102, 0.5);
+}
+
+.glow-purple {
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px rgba(255, 0, 255, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .canvas-container canvas {
+    max-width: 100%;
+    max-height: 100%;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Screen flicker effect for CRT */
+@keyframes screen-flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.98; }
+}
+
+.crt-flicker {
+  animation: screen-flicker 0.15s infinite;
+}
