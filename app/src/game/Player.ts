@@ -14,6 +14,9 @@ export class Player {
   // 拖尾效果
   trail: any[] = [];
   trailTimer: number = 0;
+
+  // 发光光圈
+  glow: any;
   
   // 生命值
   maxHealth: number = 3;
@@ -62,19 +65,20 @@ export class Player {
     graphics.generateTexture('player-pixel', 16, 16);
     graphics.destroy();
     
-    // 创建玩家精灵
+    // 创建发光光圈（在精灵下方）
+    this.glow = scene.add.graphics();
+    this.glow.setBlendMode((window as any).Phaser.BlendModes.ADD);
+
+    // 创建玩家精灵 - 普通混合模式，保证始终可见
     this.sprite = scene.physics.add.sprite(x, y, 'player-pixel');
     this.sprite.setDisplaySize(20, 20);
-    this.sprite.setTint(0x00ffc8);
+    this.sprite.setAlpha(1);
 
-    // 使用SCREEN混合模式 - 比ADD更亮
-    this.sprite.setBlendMode((window as any).Phaser.BlendModes.SCREEN);
-    
     // 物理设置 - 使用矩形碰撞
     this.sprite.setSize(12, 12);
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setDrag(0.9);
-    
+
     // 初始化拖尾数组
     this.trail = [];
   }
@@ -227,10 +231,17 @@ export class Player {
   }
   
   updateGlow(_delta: number) {
-    // 脉冲发光效果 - 始终保持高亮，脉冲更明显
-    const pulse = Math.sin(this.scene.time.now / 300) * 0.1 + 1.0;
-    this.sprite.setAlpha(pulse);
-    
+    // 精灵始终完全不透明
+    this.sprite.setAlpha(1);
+
+    // 绘制跟随玩家的发光光圈
+    this.glow.clear();
+    const pulse = Math.sin(this.scene.time.now / 400) * 0.15 + 0.45;
+    this.glow.fillStyle(0x00ffc8, pulse);
+    this.glow.fillCircle(this.sprite.x, this.sprite.y, 18);
+    this.glow.fillStyle(0x00ffff, pulse * 0.5);
+    this.glow.fillCircle(this.sprite.x, this.sprite.y, 26);
+
     // 冲刺冷却时闪烁
     if (this.dashCooldownTimer > 0 && this.dashCooldownTimer < 500) {
       const flash = Math.sin(this.scene.time.now / 50) * 0.5 + 0.5;
@@ -282,6 +293,7 @@ export class Player {
   }
   
   destroy() {
+    this.glow.destroy();
     this.sprite.destroy();
   }
 }
