@@ -228,7 +228,7 @@ export class Player {
   
   updateGlow(_delta: number) {
     // 脉冲发光效果
-    const pulse = Math.sin(this.scene.time.now / 200) * 0.3 + 0.7;
+    const pulse = Math.sin(this.scene.time.now / 200) * 0.15 + 0.85;
     this.sprite.setAlpha(pulse);
     
     // 冲刺冷却时闪烁
