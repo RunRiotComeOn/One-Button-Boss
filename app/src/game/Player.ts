@@ -238,9 +238,9 @@ export class Player {
     this.glow.clear();
     const pulse = Math.sin(this.scene.time.now / 400) * 0.15 + 0.45;
     this.glow.fillStyle(0x00ffc8, pulse);
-    this.glow.fillCircle(this.sprite.x, this.sprite.y, 18);
+    this.glow.fillCircle(this.sprite.x, this.sprite.y, 10);
     this.glow.fillStyle(0x00ffff, pulse * 0.5);
-    this.glow.fillCircle(this.sprite.x, this.sprite.y, 26);
+    this.glow.fillCircle(this.sprite.x, this.sprite.y, 15);
 
     // 冲刺冷却时闪烁
     if (this.dashCooldownTimer > 0 && this.dashCooldownTimer < 500) {
