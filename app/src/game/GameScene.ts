@@ -248,6 +248,7 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.grazeCount = 0;
     this.slowMotionActive = false;
     this.slowMotionTimer = 0;
+    this.wave = 1;
   }
   
   update(time: number, delta: number) {
