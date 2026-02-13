@@ -208,6 +208,7 @@ export class GameScene extends (window as any).Phaser.Scene {
     gridGraphics.strokePath();
     
     // 添加像素装饰块 - 随机分布
+    const pixelSize = 8;
     const decorGraphics = this.add.graphics();
     for (let i = 0; i < 30; i++) {
       const x = Math.floor(Math.random() * (this.scale.width / pixelSize)) * pixelSize;
