@@ -196,8 +196,6 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
         onUpgrade={handleUpgrade}
         onBackToMenu={onBackToMenu}
         onSubmitScore={handleSubmitScore}
-        mode={mode}
-        wave={wave}
       />
       
       {/* Wave Indicator - Pixel Style */}

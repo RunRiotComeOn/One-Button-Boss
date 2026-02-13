@@ -13,8 +13,6 @@ interface GameUIProps {
   onUpgrade: (type: string) => void;
   onBackToMenu?: () => void;
   onSubmitScore?: (name: string) => Promise<boolean>;
-  mode: 'normal' | 'endless';
-  wave: number;
 }
 
 const UPGRADES = [
@@ -35,9 +33,7 @@ export const GameUI: React.FC<GameUIProps> = ({
   showUpgrade,
   onUpgrade,
   onBackToMenu,
-  onSubmitScore,
-  mode,
-  wave
+  onSubmitScore
 }) => {
   const [nickname, setNickname] = useState('');
   const [submitted, setSubmitted] = useState(false);
