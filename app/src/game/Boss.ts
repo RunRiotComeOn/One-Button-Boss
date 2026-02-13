@@ -481,14 +481,12 @@ export class Boss {
       return;
     }
 
-    // 脉冲效果
-    const pulse = Math.sin(this.scene.time.now / 150) * 0.3 + 0.7;
-    this.sprite.setAlpha(pulse);
+    this.sprite.setAlpha(1);
+    this.sprite.setTint(color);
 
-    // 受伤时闪烁
+    // 受伤时放大效果
     if (this.health < this.maxHealth) {
       const damagePulse = (this.health / this.maxHealth) * 0.5 + 0.5;
-      this.sprite.setTint(color);
       this.sprite.setScale(1 + (1 - damagePulse) * 0.2);
     }
   }
