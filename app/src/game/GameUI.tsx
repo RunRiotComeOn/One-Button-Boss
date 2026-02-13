@@ -124,7 +124,8 @@ export const GameUI: React.FC<GameUIProps> = ({
                   maxLength={12}
                   className="flex-1 bg-[#0a0a0f] border-2 border-gray-600 text-white px-3 py-2 text-xs font-mono uppercase tracking-wider placeholder-gray-600 focus:border-[#ffff00] focus:outline-none"
                   style={{ imageRendering: 'pixelated' }}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
+                  onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Enter') handleSubmit(); }}
+                  onKeyUp={(e) => e.stopPropagation()}
                 />
                 <button
                   onClick={handleSubmit}
@@ -265,7 +266,8 @@ export const GameUI: React.FC<GameUIProps> = ({
                   maxLength={12}
                   className="flex-1 bg-[#0a0a0f] border-2 border-gray-600 text-white px-3 py-2 text-xs font-mono uppercase tracking-wider placeholder-gray-600 focus:border-[#ffff00] focus:outline-none"
                   style={{ imageRendering: 'pixelated' }}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
+                  onKeyDown={(e) => { e.stopPropagation(); if (e.key === 'Enter') handleSubmit(); }}
+                  onKeyUp={(e) => e.stopPropagation()}
                 />
                 <button
                   onClick={handleSubmit}

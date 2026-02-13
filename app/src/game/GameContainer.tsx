@@ -80,11 +80,13 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
           
           scene.onGameOver = () => {
             setIsGameOver(true);
+            scene.input?.keyboard?.clearCaptures();
           };
-          
+
           scene.onBossDefeated = () => {
             if (mode === 'normal' && waveRef.current >= 3) {
               setIsVictory(true);
+              scene.input?.keyboard?.clearCaptures();
             } else {
               setShowUpgrade(true);
             }
