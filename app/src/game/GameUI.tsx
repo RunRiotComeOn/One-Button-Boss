@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { GameStats } from './GameScene';
 
 interface GameUIProps {
@@ -11,6 +12,9 @@ interface GameUIProps {
   showUpgrade: boolean;
   onUpgrade: (type: string) => void;
   onBackToMenu?: () => void;
+  onSubmitScore?: (name: string) => Promise<boolean>;
+  mode: 'normal' | 'endless';
+  wave: number;
 }
 
 const UPGRADES = [
@@ -30,8 +34,23 @@ export const GameUI: React.FC<GameUIProps> = ({
   onResume,
   showUpgrade,
   onUpgrade,
-  onBackToMenu
+  onBackToMenu,
+  onSubmitScore,
+  mode,
+  wave
 }) => {
+  const [nickname, setNickname] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!nickname.trim() || !onSubmitScore || submitting) return;
+    setSubmitting(true);
+    const success = await onSubmitScore(nickname.trim());
+    if (success) setSubmitted(true);
+    setSubmitting(false);
+  };
+
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -92,6 +111,42 @@ export const GameUI: React.FC<GameUIProps> = ({
               </div>
             </div>
           </div>
+
+          {/* Score Submission */}
+          {onSubmitScore && !submitted ? (
+            <div
+              className="bg-[#1a1a2e] border-2 border-[#ffff00] p-4 mb-6"
+              style={{ boxShadow: '4px 4px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
+            >
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3 text-center">SUBMIT TO LEADERBOARD</p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value.slice(0, 12))}
+                  placeholder="NICKNAME"
+                  maxLength={12}
+                  className="flex-1 bg-[#0a0a0f] border-2 border-gray-600 text-white px-3 py-2 text-xs font-mono uppercase tracking-wider placeholder-gray-600 focus:border-[#ffff00] focus:outline-none"
+                  style={{ imageRendering: 'pixelated' }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={!nickname.trim() || submitting}
+                  className="px-4 py-2 bg-[#1a1a2e] border-2 border-[#ffff00] text-[#ffff00] hover:bg-[#ffff00] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ fontFamily: '"Press Start 2P", monospace', boxShadow: '3px 3px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
+                >
+                  {submitting ? '...' : 'SUBMIT'}
+                </button>
+              </div>
+            </div>
+          ) : submitted ? (
+            <div className="mb-6 text-center">
+              <p className="text-[#ffff00] text-xs uppercase tracking-wider" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                SCORE SUBMITTED!
+              </p>
+            </div>
+          ) : null}
 
           <div className="flex flex-col gap-4">
             <button
@@ -198,6 +253,42 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           </div>
           
+          {/* Score Submission */}
+          {onSubmitScore && !submitted ? (
+            <div
+              className="bg-[#1a1a2e] border-2 border-[#ffff00] p-4 mb-6"
+              style={{ boxShadow: '4px 4px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
+            >
+              <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3 text-center">SUBMIT TO LEADERBOARD</p>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value.slice(0, 12))}
+                  placeholder="NICKNAME"
+                  maxLength={12}
+                  className="flex-1 bg-[#0a0a0f] border-2 border-gray-600 text-white px-3 py-2 text-xs font-mono uppercase tracking-wider placeholder-gray-600 focus:border-[#ffff00] focus:outline-none"
+                  style={{ imageRendering: 'pixelated' }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(); }}
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={!nickname.trim() || submitting}
+                  className="px-4 py-2 bg-[#1a1a2e] border-2 border-[#ffff00] text-[#ffff00] hover:bg-[#ffff00] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200 text-xs disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ fontFamily: '"Press Start 2P", monospace', boxShadow: '3px 3px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
+                >
+                  {submitting ? '...' : 'SUBMIT'}
+                </button>
+              </div>
+            </div>
+          ) : submitted ? (
+            <div className="mb-6 text-center">
+              <p className="text-[#ffff00] text-xs uppercase tracking-wider" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                SCORE SUBMITTED!
+              </p>
+            </div>
+          ) : null}
+
           <div className="flex flex-col gap-4">
             <button
               onClick={onRestart}

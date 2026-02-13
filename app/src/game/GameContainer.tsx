@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import type { GameStats } from './GameScene';
 import { GameUI } from './GameUI';
+import { submitScore } from '../lib/supabase';
 
 interface GameContainerProps {
   mode: 'normal' | 'endless';
@@ -123,6 +124,17 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
     setIsPaused(false);
   }, []);
 
+  const handleSubmitScore = useCallback(async (playerName: string): Promise<boolean> => {
+    return submitScore({
+      player_name: playerName,
+      mode,
+      score: stats.score,
+      graze_count: stats.grazeCount,
+      wave: waveRef.current,
+      time_ms: stats.time
+    });
+  }, [mode, stats]);
+
   const handleUpgrade = useCallback((type: string) => {
     if (sceneRef.current) {
       sceneRef.current.applyUpgrade(type);
@@ -183,6 +195,9 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
         showUpgrade={showUpgrade}
         onUpgrade={handleUpgrade}
         onBackToMenu={onBackToMenu}
+        onSubmitScore={handleSubmitScore}
+        mode={mode}
+        wave={wave}
       />
       
       {/* Wave Indicator - Pixel Style */}

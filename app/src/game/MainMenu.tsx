@@ -2,9 +2,10 @@ import { useState } from 'react';
 
 interface MainMenuProps {
   onStartGame: (mode: 'normal' | 'endless') => void;
+  onShowLeaderboard: () => void;
 }
 
-export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
+export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboard }) => {
   const [showInstructions, setShowInstructions] = useState(false);
   const [hoveredMode, setHoveredMode] = useState<'normal' | 'endless' | null>(null);
 
@@ -324,14 +325,23 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           </button>
         </div>
         
-        {/* Instructions Button - Pixel */}
-        <button
-          onClick={() => setShowInstructions(true)}
-          className="px-6 py-3 bg-[#1a1a2e] border-2 border-gray-600 text-gray-400 hover:text-[#00ffc8] hover:border-[#00ffc8] transition-all duration-200 font-mono text-xs uppercase tracking-wider"
-          style={{ boxShadow: '3px 3px 0 #333' }}
-        >
-          ? HOW TO PLAY
-        </button>
+        {/* Instructions & Leaderboard Buttons */}
+        <div className="flex flex-col items-center gap-4">
+          <button
+            onClick={() => setShowInstructions(true)}
+            className="px-6 py-3 bg-[#1a1a2e] border-2 border-gray-600 text-gray-400 hover:text-[#00ffc8] hover:border-[#00ffc8] transition-all duration-200 font-mono text-xs uppercase tracking-wider"
+            style={{ boxShadow: '3px 3px 0 #333' }}
+          >
+            ? HOW TO PLAY
+          </button>
+          <button
+            onClick={onShowLeaderboard}
+            className="px-6 py-3 bg-[#1a1a2e] border-2 border-gray-600 text-gray-400 hover:text-[#ffff00] hover:border-[#ffff00] transition-all duration-200 font-mono text-xs uppercase tracking-wider"
+            style={{ boxShadow: '3px 3px 0 #333' }}
+          >
+            LEADERBOARD
+          </button>
+        </div>
       </div>
       
       {/* Footer - Pixel Style */}

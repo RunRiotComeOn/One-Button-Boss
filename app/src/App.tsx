@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { MainMenu } from './game/MainMenu';
 import { GameContainer } from './game/GameContainer';
+import { Leaderboard } from './game/Leaderboard';
 import './App.css';
 
-type GameState = 'menu' | 'playing';
+type GameState = 'menu' | 'playing' | 'leaderboard';
 type GameMode = 'normal' | 'endless';
 
 function App() {
@@ -19,10 +20,16 @@ function App() {
     setGameState('menu');
   };
 
+  const handleShowLeaderboard = () => {
+    setGameState('leaderboard');
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       {gameState === 'menu' ? (
-        <MainMenu onStartGame={handleStartGame} />
+        <MainMenu onStartGame={handleStartGame} onShowLeaderboard={handleShowLeaderboard} />
+      ) : gameState === 'leaderboard' ? (
+        <Leaderboard onBackToMenu={handleBackToMenu} />
       ) : (
         <GameContainer mode={gameMode} onBackToMenu={handleBackToMenu} />
       )}
