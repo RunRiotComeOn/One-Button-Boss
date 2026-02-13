@@ -29,10 +29,44 @@ export interface SubmitScoreData {
 
 export async function submitScore(data: SubmitScoreData): Promise<boolean> {
   if (!supabase) return false;
-  const { error } = await supabase.from('leaderboard').insert(data);
-  if (error) {
-    console.error('Failed to submit score:', error);
-    return false;
+
+  // 查找同名同模式的所有已有记录
+  const { data: existingRows } = await supabase
+    .from('leaderboard')
+    .select('id')
+    .eq('player_name', data.player_name)
+    .eq('mode', data.mode)
+    .order('created_at', { ascending: true });
+
+  if (existingRows && existingRows.length > 0) {
+    // 保留第一条，删除多余的重复记录
+    const keepId = existingRows[0].id;
+    if (existingRows.length > 1) {
+      const duplicateIds = existingRows.slice(1).map(r => r.id);
+      await supabase.from('leaderboard').delete().in('id', duplicateIds);
+    }
+
+    // 覆盖保留的那条记录
+    const { error } = await supabase
+      .from('leaderboard')
+      .update({
+        score: data.score,
+        graze_count: data.graze_count,
+        wave: data.wave,
+        time_ms: data.time_ms,
+        created_at: new Date().toISOString()
+      })
+      .eq('id', keepId);
+    if (error) {
+      console.error('Failed to update score:', error);
+      return false;
+    }
+  } else {
+    const { error } = await supabase.from('leaderboard').insert(data);
+    if (error) {
+      console.error('Failed to submit score:', error);
+      return false;
+    }
   }
   return true;
 }

@@ -37,6 +37,13 @@ export class Boss {
   
   // 攻击模式
   currentAttackPattern: number = 0;
+
+  // Phase 切换护盾
+  phaseShieldTimer: number = 3000; // 开局也有 3s 护盾
+  lastPhase: number = BossPhase.PHASE_1;
+
+  // 减速区域
+  slowZones: { x: number; y: number; radius: number; timer: number; graphics: any }[] = [];
   
   constructor(scene: any, x: number, y: number, bulletPool: BulletPool) {
     this.scene = scene;
@@ -102,37 +109,53 @@ export class Boss {
   update(delta: number, playerPos: { x: number; y: number }) {
     // 更新阶段
     this.updatePhase();
-    
+
+    // Phase 护盾计时
+    if (this.phaseShieldTimer > 0) {
+      this.phaseShieldTimer -= delta;
+    }
+
     // 移动
     this.updateMovement(delta);
-    
+
     // 攻击
     this.attackTimer += delta;
     if (this.attackTimer >= this.getAttackInterval()) {
       this.attackTimer = 0;
       this.executeAttack(playerPos);
     }
-    
+
     // 更新旋转角度
     this.spiralAngle += delta * 0.001;
-    
+
     // 更新警告
     this.updateWarning(delta);
-    
+
+    // 更新减速区域
+    this.updateSlowZones(delta);
+
     // 发光效果
     this.updateGlow();
   }
   
   updatePhase() {
     const healthPercent = this.health / this.maxHealth;
-    
+    let newPhase = BossPhase.PHASE_1;
+
     if (healthPercent > 0.7) {
-      this.phase = BossPhase.PHASE_1;
+      newPhase = BossPhase.PHASE_1;
     } else if (healthPercent > 0.3) {
-      this.phase = BossPhase.PHASE_2;
+      newPhase = BossPhase.PHASE_2;
     } else {
-      this.phase = BossPhase.PHASE_3;
+      newPhase = BossPhase.PHASE_3;
     }
+
+    if (newPhase !== this.lastPhase) {
+      this.lastPhase = newPhase;
+      this.phaseShieldTimer = 3000;
+    }
+
+    this.phase = newPhase;
   }
   
   updateMovement(delta: number) {
@@ -266,27 +289,32 @@ export class Boss {
   
   // 第三阶段攻击 - 狂暴阶段
   phase3Attack(angleToPlayer: number, playerPos: { x: number; y: number }) {
-    this.currentAttackPattern = (this.currentAttackPattern + 1) % 4;
-    
+    this.currentAttackPattern = (this.currentAttackPattern + 1) % 5;
+
     switch (this.currentAttackPattern) {
       case 0:
         // 全屏交叉弹幕
         this.crossBarrage();
         break;
-        
+
       case 1:
         // 假子弹 + 真子弹
         this.fakeBulletAttack(angleToPlayer);
         break;
-        
+
       case 2:
         // 地面预警区域
         this.warningAreaAttack(playerPos);
         break;
-        
+
       case 3:
         // 螺旋弹幕风暴
         this.spiralStorm();
+        break;
+
+      case 4:
+        // 减速区域
+        this.slowZoneAttack(playerPos);
         break;
     }
   }
@@ -355,6 +383,28 @@ export class Boss {
     }
   }
   
+  slowZoneAttack(playerPos: { x: number; y: number }) {
+    // 在玩家附近随机放置 1~2 个减速圈
+    const count = 1 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < count; i++) {
+      const offsetX = (Math.random() - 0.5) * 200;
+      const offsetY = (Math.random() - 0.5) * 200;
+      const zx = Math.max(80, Math.min(this.scene.scale.width - 80, playerPos.x + offsetX));
+      const zy = Math.max(80, Math.min(this.scene.scale.height - 80, playerPos.y + offsetY));
+      const radius = 70 + Math.random() * 30;
+
+      const gfx = this.scene.add.graphics();
+      gfx.fillStyle(0xff0066, 0.15);
+      gfx.fillCircle(0, 0, radius);
+      gfx.lineStyle(2, 0xff0066, 0.5);
+      gfx.strokeCircle(0, 0, radius);
+      gfx.setPosition(zx, zy);
+      gfx.setBlendMode((window as any).Phaser.BlendModes.ADD);
+
+      this.slowZones.push({ x: zx, y: zy, radius, timer: 3000, graphics: gfx });
+    }
+  }
+
   spiralStorm() {
     // 快速螺旋弹幕
     for (let i = 0; i < 16; i++) {
@@ -382,6 +432,35 @@ export class Boss {
     }
   }
   
+  updateSlowZones(delta: number) {
+    for (let i = this.slowZones.length - 1; i >= 0; i--) {
+      const zone = this.slowZones[i];
+      zone.timer -= delta;
+
+      // 最后 500ms 闪烁消失
+      if (zone.timer < 500) {
+        const flash = Math.sin(this.scene.time.now / 60) * 0.5 + 0.5;
+        zone.graphics.setAlpha(flash);
+      }
+
+      if (zone.timer <= 0) {
+        zone.graphics.destroy();
+        this.slowZones.splice(i, 1);
+      }
+    }
+  }
+
+  isPlayerInSlowZone(playerPos: { x: number; y: number }): boolean {
+    for (const zone of this.slowZones) {
+      const dx = playerPos.x - zone.x;
+      const dy = playerPos.y - zone.y;
+      if (dx * dx + dy * dy < zone.radius * zone.radius) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   updateGlow() {
     // 根据阶段改变颜色
     let color = 0xff0066;
@@ -394,10 +473,18 @@ export class Boss {
         break;
     }
     
+    // 护盾期间明暗闪烁
+    if (this.phaseShieldTimer > 0) {
+      const shieldFlash = Math.sin(this.scene.time.now / 120) * 0.4 + 0.6;
+      this.sprite.setAlpha(shieldFlash);
+      this.sprite.setTint(0xffffff);
+      return;
+    }
+
     // 脉冲效果
     const pulse = Math.sin(this.scene.time.now / 150) * 0.3 + 0.7;
     this.sprite.setAlpha(pulse);
-    
+
     // 受伤时闪烁
     if (this.health < this.maxHealth) {
       const damagePulse = (this.health / this.maxHealth) * 0.5 + 0.5;
@@ -407,6 +494,9 @@ export class Boss {
   }
   
   takeDamage(amount: number): boolean {
+    // 护盾期间免疫伤害
+    if (this.phaseShieldTimer > 0) return false;
+
     this.health -= amount;
     
     // 受伤效果
@@ -443,6 +533,10 @@ export class Boss {
     if (this.warningGraphics) {
       this.warningGraphics.destroy();
     }
+    for (const zone of this.slowZones) {
+      zone.graphics.destroy();
+    }
+    this.slowZones = [];
     this.sprite.destroy();
   }
 }

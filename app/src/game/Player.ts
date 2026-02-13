@@ -12,6 +12,7 @@ export class Player {
   isInvincible: boolean = false;
   invincibleTimer: number = 0;
   invincibleDuration: number = 2000;
+  slowed: boolean = false;
   
   // 拖尾效果
   trail: any[] = [];
@@ -147,6 +148,12 @@ export class Player {
       vy = Math.sin(angle) * this.speed;
     }
     
+    // 减速区域内移速降低 50%
+    if (this.slowed) {
+      vx *= 0.5;
+      vy *= 0.5;
+    }
+
     this.sprite.setVelocity(vx, vy);
   }
   

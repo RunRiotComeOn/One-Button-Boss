@@ -279,6 +279,9 @@ export class GameScene extends (window as any).Phaser.Scene {
       }
     });
     
+    // 检查玩家是否在减速区域
+    this.player.slowed = this.boss.isPlayerInSlowZone(this.player.getPosition());
+
     // 检查擦弹
     this.checkGraze();
     
@@ -322,21 +325,31 @@ export class GameScene extends (window as any).Phaser.Scene {
     // 冲刺穿过 Boss 造成伤害
     if (this.player.isDashing && this.player.isInvincible) {
       const isDead = this.boss.takeDamage(5);
-      
+
       // 生命偷取
       if (this.upgrades.lifeSteal) {
         this.player.heal();
       }
-      
+
       // 得分奖励
       this.score += 100;
-      
+
       // 特效
       this.createHitEffect(this.boss.getPosition().x, this.boss.getPosition().y);
-      
+
       if (isDead) {
         this.bossDefeated();
       }
+      return;
+    }
+
+    // 非冲刺状态触怪即死
+    if (!this.player.isDashing && !this.player.isInvincible) {
+      this.player.health = 0;
+      this.player.isInvincible = true;
+      this.scene.sound.play('hit', { volume: 0.6 });
+      this.cameras.main.shake(300, 0.02);
+      this.gameOver();
     }
   }
   
