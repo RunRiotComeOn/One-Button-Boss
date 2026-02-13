@@ -280,11 +280,6 @@ export class GameScene extends (window as any).Phaser.Scene {
     // 检查擦弹
     this.checkGraze();
     
-    // 检查 Boss 死亡
-    if (this.boss.isDead()) {
-      this.onBossDefeated?.();
-    }
-    
     // 更新 UI
     this.updateStats();
   }
@@ -499,7 +494,11 @@ export class GameScene extends (window as any).Phaser.Scene {
     
     // 得分奖励
     this.score += 5000;
-    
+
+    // 清除所有子弹并暂停游戏
+    this.bulletPool.clear();
+    this.pause();
+
     // 通知 UI
     this.onBossDefeated?.();
   }

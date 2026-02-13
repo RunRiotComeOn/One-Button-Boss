@@ -9,6 +9,7 @@ interface GameUIProps {
   onResume: () => void;
   showUpgrade: boolean;
   onUpgrade: (type: string) => void;
+  onBackToMenu?: () => void;
 }
 
 const UPGRADES = [
@@ -26,7 +27,8 @@ export const GameUI: React.FC<GameUIProps> = ({
   onPause,
   onResume,
   showUpgrade,
-  onUpgrade
+  onUpgrade,
+  onBackToMenu
 }) => {
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
@@ -148,23 +150,36 @@ export const GameUI: React.FC<GameUIProps> = ({
     return (
       <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0f]/90 z-50 font-mono">
         <div className="text-center">
-          <h2 
+          <h2
             className="text-4xl font-bold mb-8 text-[#ffff00] uppercase tracking-widest"
             style={{ fontFamily: '"Press Start 2P", monospace', textShadow: '3px 3px 0 #000' }}
           >
             PAUSED
           </h2>
-          <button
-            onClick={onResume}
-            className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
-            style={{ 
-              fontFamily: '"Press Start 2P", monospace',
-              boxShadow: '4px 4px 0 #00ffc8',
-              imageRendering: 'pixelated'
-            }}
-          >
-            RESUME
-          </button>
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={onResume}
+              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              style={{
+                fontFamily: '"Press Start 2P", monospace',
+                boxShadow: '4px 4px 0 #00ffc8',
+                imageRendering: 'pixelated'
+              }}
+            >
+              RESUME
+            </button>
+            <button
+              onClick={onBackToMenu}
+              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              style={{
+                fontFamily: '"Press Start 2P", monospace',
+                boxShadow: '4px 4px 0 #ff0066',
+                imageRendering: 'pixelated'
+              }}
+            >
+              MENU
+            </button>
+          </div>
         </div>
       </div>
     );

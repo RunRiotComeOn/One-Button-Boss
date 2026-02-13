@@ -117,13 +117,16 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
   const handleUpgrade = useCallback((type: string) => {
     if (sceneRef.current) {
       sceneRef.current.applyUpgrade(type);
-      
+
       // 重置 Boss
       sceneRef.current.boss.health = Math.min(
         sceneRef.current.boss.maxHealth + 50,
         300
       );
       sceneRef.current.boss.maxHealth = sceneRef.current.boss.health;
+
+      // 恢复游戏
+      sceneRef.current.resume();
     }
     setShowUpgrade(false);
   }, []);
@@ -167,22 +170,8 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
         onResume={handleResume}
         showUpgrade={showUpgrade}
         onUpgrade={handleUpgrade}
+        onBackToMenu={onBackToMenu}
       />
-      
-      {/* Back to Menu Button - Pixel Style */}
-      {!isGameOver && !showUpgrade && (
-        <button
-          onClick={onBackToMenu}
-          className="absolute top-4 left-4 px-4 py-2 bg-[#1a1a2e] border-2 border-gray-600 hover:border-[#00ffc8] text-white text-xs uppercase tracking-wider transition-all duration-200 z-40"
-          style={{ 
-            boxShadow: '3px 3px 0 #333',
-            imageRendering: 'pixelated',
-            fontFamily: '"Press Start 2P", monospace'
-          }}
-        >
-          ← MENU
-        </button>
-      )}
       
       {/* Wave Indicator - Pixel Style */}
       {!isGameOver && !showUpgrade && (
