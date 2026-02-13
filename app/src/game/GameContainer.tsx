@@ -163,11 +163,32 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
   }, []);
 
   return (
-    <div className="relative w-full h-screen bg-[#0a0a0f] overflow-hidden font-mono">
+    <div className="relative w-full h-screen bg-[#0a0a0f] overflow-hidden font-mono crt-overlay crt-vignette">
+      {/* Pixel Grid Background */}
+      <div 
+        className="absolute inset-0 opacity-20 pointer-events-none"
+        style={{
+          backgroundImage: `
+            linear-gradient(rgba(0, 255, 200, 0.15) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 255, 200, 0.15) 1px, transparent 1px)
+          `,
+          backgroundSize: '8px 8px',
+          imageRendering: 'pixelated'
+        }}
+      />
+      
       {/* Game Canvas Container */}
-      <div
-        ref={containerRef}
+      <div 
+        ref={containerRef} 
         className="absolute inset-0 flex items-center justify-center pixelated"
+      />
+      
+      {/* CRT Scanlines */}
+      <div 
+        className="absolute inset-0 pointer-events-none opacity-30 z-50"
+        style={{
+          background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px)'
+        }}
       />
       
       {/* Game UI Overlay */}
@@ -201,6 +222,11 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
         </div>
       )}
       
+      {/* Corner Decorations */}
+      <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-[#00ffc8] opacity-50" />
+      <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-[#00ffc8] opacity-50" />
+      <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-[#00ffc8] opacity-50" />
+      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-[#00ffc8] opacity-50" />
     </div>
   );
 };
