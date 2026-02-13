@@ -133,7 +133,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
       score: stats.score,
       graze_count: stats.grazeCount,
       wave: waveRef.current,
-      time_ms: stats.time
+      time_ms: Math.round(stats.time)
     });
   }, [mode, stats]);
 
