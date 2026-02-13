@@ -54,19 +54,19 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
           
           <div className="grid md:grid-cols-2 gap-4">
             {/* Controls */}
-            <div 
+            <div
               className="bg-[#1a1a2e] border-2 border-[#00ffc8] p-6"
               style={{ boxShadow: '6px 6px 0 rgba(0, 255, 200, 0.3)', imageRendering: 'pixelated' }}
             >
-              <h3 
+              <h3
                 className="text-lg font-bold text-[#00ffc8] mb-4 uppercase tracking-wider"
                 style={{ fontFamily: '"Press Start 2P", monospace' }}
               >
-                🎮 CONTROLS
+                CONTROLS
               </h3>
               <ul className="space-y-3 text-gray-300 font-mono text-sm">
                 <li className="flex items-center gap-3">
-                  <span 
+                  <span
                     className="px-3 py-1 bg-[#0a0a0f] border border-[#00ffc8] text-[#00ffc8]"
                     style={{ boxShadow: '2px 2px 0 #00ffc8' }}
                   >
@@ -75,84 +75,92 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
                   <span>Move in 4 directions</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <span 
+                  <span
                     className="px-3 py-1 bg-[#0a0a0f] border border-[#00ffc8] text-[#00ffc8]"
                     style={{ boxShadow: '2px 2px 0 #00ffc8' }}
                   >
                     MOUSE
                   </span>
-                  <span>Move toward cursor</span>
+                  <span>Hold to move toward cursor</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <span 
+                  <span
                     className="px-3 py-1 bg-[#0a0a0f] border border-[#ff0066] text-[#ff0066]"
                     style={{ boxShadow: '2px 2px 0 #ff0066' }}
                   >
                     SPACE
                   </span>
-                  <span><strong className="text-[#ff0066]">DASH</strong> - Invincible!</span>
+                  <span><strong className="text-[#ff0066]">DASH</strong> - Invincible dodge!</span>
                 </li>
               </ul>
-              <div 
+              <div
                 className="mt-4 p-3 bg-[#0a0a0f] border border-[#00ffc8]"
                 style={{ boxShadow: '3px 3px 0 rgba(0, 255, 200, 0.5)' }}
               >
                 <p className="text-xs text-[#00ffc8]">
-                  ⚡ Dash has a <strong>3 second cooldown</strong>. Use it wisely!
+                  Dash cooldown shown as a ring around your character
                 </p>
               </div>
             </div>
-            
+
             {/* Combat */}
-            <div 
+            <div
               className="bg-[#1a1a2e] border-2 border-[#ff00ff] p-6"
               style={{ boxShadow: '6px 6px 0 rgba(255, 0, 255, 0.3)', imageRendering: 'pixelated' }}
             >
-              <h3 
+              <h3
                 className="text-lg font-bold text-[#ff00ff] mb-4 uppercase tracking-wider"
                 style={{ fontFamily: '"Press Start 2P", monospace' }}
               >
-                ⚔️ COMBAT
+                COMBAT
               </h3>
               <ul className="space-y-3 text-gray-300 font-mono text-sm">
                 <li className="flex items-start gap-3">
-                  <span className="text-lg">🎯</span>
-                  <div>
-                    <strong className="text-[#00ffc8]">Graze</strong>
-                    <p className="text-xs text-gray-400">Get close to bullets for bonus points!</p>
-                  </div>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-lg">⚡</span>
+                  <span className="text-[#ff0066] font-bold">></span>
                   <div>
                     <strong className="text-[#ff0066]">Dash Attack</strong>
-                    <p className="text-xs text-gray-400">Dash through the boss to deal damage!</p>
+                    <p className="text-xs text-gray-400">Dash through the boss to deal damage</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-lg">⏱️</span>
+                  <span className="text-[#00ffc8] font-bold">></span>
                   <div>
-                    <strong className="text-[#ffff00]">Slow Motion</strong>
-                    <p className="text-xs text-gray-400">Near-miss triggers slow-mo!</p>
+                    <strong className="text-[#00ffc8]">Graze</strong>
+                    <p className="text-xs text-gray-400">Fly close to bullets for bonus score</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-[#ffff00] font-bold">></span>
+                  <div>
+                    <strong className="text-[#ffff00]">I-Frames</strong>
+                    <p className="text-xs text-gray-400">2s invincibility after taking damage</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-[#ff00ff] font-bold">></span>
+                  <div>
+                    <strong className="text-[#ff00ff]">Upgrades</strong>
+                    <p className="text-xs text-gray-400">Choose a power-up between waves</p>
                   </div>
                 </li>
               </ul>
             </div>
-            
+
             {/* Boss Phases */}
-            <div 
+            <div
               className="bg-[#1a1a2e] border-2 border-[#ff0066] p-6 md:col-span-2"
               style={{ boxShadow: '6px 6px 0 rgba(255, 0, 102, 0.3)', imageRendering: 'pixelated' }}
             >
-              <h3 
+              <h3
                 className="text-lg font-bold text-[#ff0066] mb-4 uppercase tracking-wider"
                 style={{ fontFamily: '"Press Start 2P", monospace' }}
               >
-                👾 BOSS PHASES
+                BOSS PHASES
               </h3>
+              <p className="text-xs text-gray-400 mb-3 font-mono">Boss gains 3s shield when changing phase. Wave 2+ bullets deal 1.5x damage.</p>
               <div className="grid md:grid-cols-3 gap-4">
                 <div className="p-4 bg-[#0a0a0f] border-2 border-[#00ff88]">
-                  <h4 
+                  <h4
                     className="font-bold text-[#00ff88] mb-2 text-xs uppercase"
                     style={{ fontFamily: '"Press Start 2P", monospace' }}
                   >
@@ -161,24 +169,23 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
                   <ul className="text-xs text-gray-400 space-y-1 font-mono">
                     <li>► Fan shots</li>
                     <li>► Circle burst</li>
-                    <li>► Learn patterns</li>
                   </ul>
                 </div>
                 <div className="p-4 bg-[#0a0a0f] border-2 border-[#ffaa00]">
-                  <h4 
+                  <h4
                     className="font-bold text-[#ffaa00] mb-2 text-xs uppercase"
                     style={{ fontFamily: '"Press Start 2P", monospace' }}
                   >
                     PHASE 2
                   </h4>
                   <ul className="text-xs text-gray-400 space-y-1 font-mono">
-                    <li>► Rotating</li>
-                    <li>► Delayed boom</li>
-                    <li>► Homing</li>
+                    <li>► Rotating bullets</li>
+                    <li>► Delayed explosions</li>
+                    <li>► Homing shots</li>
                   </ul>
                 </div>
                 <div className="p-4 bg-[#0a0a0f] border-2 border-[#ff0066]">
-                  <h4 
+                  <h4
                     className="font-bold text-[#ff0066] mb-2 text-xs uppercase"
                     style={{ fontFamily: '"Press Start 2P", monospace' }}
                   >
@@ -187,7 +194,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
                   <ul className="text-xs text-gray-400 space-y-1 font-mono">
                     <li>► Cross barrage</li>
                     <li>► Fake bullets</li>
-                    <li>► Warning zones</li>
+                    <li>► Slow zones</li>
+                    <li>► Spiral storm</li>
                   </ul>
                 </div>
               </div>
