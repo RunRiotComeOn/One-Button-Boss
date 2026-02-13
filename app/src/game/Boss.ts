@@ -44,6 +44,8 @@ export class Boss {
 
   // 减速区域
   slowZones: { x: number; y: number; radius: number; timer: number; graphics: any }[] = [];
+  slowZoneTimer: number = 0;
+  slowZoneInterval: number = 4000;
   
   constructor(scene: any, x: number, y: number, bulletPool: BulletPool) {
     this.scene = scene;
@@ -130,6 +132,16 @@ export class Boss {
 
     // 更新警告
     this.updateWarning(delta);
+
+    // Phase 3: 随机时机在玩家位置放减速区域
+    if (this.phase === BossPhase.PHASE_3) {
+      this.slowZoneTimer += delta;
+      if (this.slowZoneTimer >= this.slowZoneInterval) {
+        this.slowZoneTimer = 0;
+        this.slowZoneInterval = 3000 + Math.random() * 4000; // 3~7s 随机间隔
+        this.slowZoneAttack(playerPos);
+      }
+    }
 
     // 更新减速区域
     this.updateSlowZones(delta);
@@ -289,7 +301,7 @@ export class Boss {
   
   // 第三阶段攻击 - 狂暴阶段
   phase3Attack(angleToPlayer: number, playerPos: { x: number; y: number }) {
-    this.currentAttackPattern = (this.currentAttackPattern + 1) % 5;
+    this.currentAttackPattern = (this.currentAttackPattern + 1) % 4;
 
     switch (this.currentAttackPattern) {
       case 0:
@@ -310,11 +322,6 @@ export class Boss {
       case 3:
         // 螺旋弹幕风暴
         this.spiralStorm();
-        break;
-
-      case 4:
-        // 减速区域
-        this.slowZoneAttack(playerPos);
         break;
     }
   }
@@ -384,25 +391,18 @@ export class Boss {
   }
   
   slowZoneAttack(playerPos: { x: number; y: number }) {
-    // 在玩家附近随机放置 1~2 个减速圈
-    const count = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < count; i++) {
-      const offsetX = (Math.random() - 0.5) * 200;
-      const offsetY = (Math.random() - 0.5) * 200;
-      const zx = Math.max(80, Math.min(this.scene.scale.width - 80, playerPos.x + offsetX));
-      const zy = Math.max(80, Math.min(this.scene.scale.height - 80, playerPos.y + offsetY));
-      const radius = 70 + Math.random() * 30;
+    // 在玩家当前位置放置减速圈，大小随机 (80~140)
+    const radius = 80 + Math.random() * 60;
 
-      const gfx = this.scene.add.graphics();
-      gfx.fillStyle(0xff0066, 0.15);
-      gfx.fillCircle(0, 0, radius);
-      gfx.lineStyle(2, 0xff0066, 0.5);
-      gfx.strokeCircle(0, 0, radius);
-      gfx.setPosition(zx, zy);
-      gfx.setBlendMode((window as any).Phaser.BlendModes.ADD);
+    const gfx = this.scene.add.graphics();
+    gfx.fillStyle(0xff0066, 0.15);
+    gfx.fillCircle(0, 0, radius);
+    gfx.lineStyle(2, 0xff0066, 0.5);
+    gfx.strokeCircle(0, 0, radius);
+    gfx.setPosition(playerPos.x, playerPos.y);
+    gfx.setBlendMode((window as any).Phaser.BlendModes.ADD);
 
-      this.slowZones.push({ x: zx, y: zy, radius, timer: 3000, graphics: gfx });
-    }
+    this.slowZones.push({ x: playerPos.x, y: playerPos.y, radius, timer: 3000, graphics: gfx });
   }
 
   spiralStorm() {

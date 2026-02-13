@@ -311,8 +311,9 @@ export class GameScene extends (window as any).Phaser.Scene {
       this.activateSlowMotion();
     }
     
-    // 玩家受伤
-    if (this.player.takeDamage()) {
+    // 玩家受伤 - Phase 2+ 伤害 1.5 格
+    const damage = this.boss.phase >= 2 ? 1.5 : 1;
+    if (this.player.takeDamage(damage)) {
       bulletObj.destroy();
       
       // 检查游戏结束
@@ -327,9 +328,9 @@ export class GameScene extends (window as any).Phaser.Scene {
     if (this.player.isDashing && this.player.isInvincible) {
       const isDead = this.boss.takeDamage(5);
 
-      // 生命偷取
+      // 生命偷取 - 回复半格血
       if (this.upgrades.lifeSteal) {
-        this.player.heal();
+        this.player.heal(0.5);
       }
 
       // 得分奖励

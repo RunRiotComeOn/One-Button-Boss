@@ -470,17 +470,27 @@ export const GameUI: React.FC<GameUIProps> = ({
           {/* Player Health - Pixel Hearts */}
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400 uppercase tracking-wider mr-2">HP</span>
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className={`w-6 h-6 border-2 transition-all duration-200 ${
-                  i < stats.health
-                    ? 'bg-[#00ffc8] border-[#00ffff]'
-                    : 'bg-[#1a1a2e] border-gray-600'
-                }`}
-                style={{ boxShadow: i < stats.health ? '2px 2px 0 rgba(0, 255, 200, 0.5)' : 'none', imageRendering: 'pixelated' }}
-              />
-            ))}
+            {[...Array(3)].map((_, i) => {
+              const full = stats.health >= i + 1;
+              const half = !full && stats.health >= i + 0.5;
+              return (
+                <div
+                  key={i}
+                  className={`w-6 h-6 border-2 transition-all duration-200 ${
+                    full
+                      ? 'bg-[#00ffc8] border-[#00ffff]'
+                      : half
+                        ? 'border-[#00ffff]'
+                        : 'bg-[#1a1a2e] border-gray-600'
+                  }`}
+                  style={{
+                    background: half ? 'linear-gradient(90deg, #00ffc8 50%, #1a1a2e 50%)' : undefined,
+                    boxShadow: full || half ? '2px 2px 0 rgba(0, 255, 200, 0.5)' : 'none',
+                    imageRendering: 'pixelated'
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
         

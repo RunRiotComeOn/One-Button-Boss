@@ -287,10 +287,10 @@ export class Player {
     }
   }
   
-  takeDamage(): boolean {
+  takeDamage(amount: number = 1): boolean {
     if (this.isInvincible) return false;
 
-    this.health--;
+    this.health = Math.max(0, this.health - amount);
 
     // Activate i-frames
     this.isInvincible = true;
@@ -314,9 +314,9 @@ export class Player {
     return true;
   }
   
-  heal() {
+  heal(amount: number = 1) {
     if (this.health < this.maxHealth) {
-      this.health++;
+      this.health = Math.min(this.maxHealth, this.health + amount);
     }
   }
   
