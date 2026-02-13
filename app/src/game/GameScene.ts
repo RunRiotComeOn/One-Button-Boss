@@ -28,6 +28,7 @@ export class GameScene extends (window as any).Phaser.Scene {
   isGameOver: boolean = false;
   isPaused: boolean = false;
   gameTime: number = 0;
+  wave: number = 1;
   
   // 得分系统
   score: number = 0;
@@ -311,8 +312,8 @@ export class GameScene extends (window as any).Phaser.Scene {
       this.activateSlowMotion();
     }
     
-    // 玩家受伤 - Phase 2+ 伤害 1.5 格
-    const damage = this.boss.phase >= 2 ? 1.5 : 1;
+    // 玩家受伤 - Wave 2+ 伤害 1.5 格
+    const damage = this.wave >= 2 ? 1.5 : 1;
     if (this.player.takeDamage(damage)) {
       bulletObj.destroy();
       

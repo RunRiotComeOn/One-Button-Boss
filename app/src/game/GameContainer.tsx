@@ -160,6 +160,9 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
     setShowUpgrade(false);
     setWave(w => w + 1);
     waveRef.current += 1;
+    if (sceneRef.current) {
+      sceneRef.current.wave = waveRef.current;
+    }
   }, []);
 
   return (
