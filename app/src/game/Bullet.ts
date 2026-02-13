@@ -23,6 +23,9 @@ export class Bullet extends (window as any).Phaser.Physics.Arcade.Sprite {
   orbitRadius: number = 0;
   orbitAngle: number = 0;
   
+  // 缓存的玩家位置引用（由 GameScene 设置）
+  playerPosRef: { x: number; y: number } | null = null;
+
   constructor(scene: any, x: number, y: number, texture: string = 'bullet') {
     super(scene, x, y, texture);
     this.scene = scene;
@@ -38,7 +41,8 @@ export class Bullet extends (window as any).Phaser.Physics.Arcade.Sprite {
     this.setBlendMode((window as any).Phaser.BlendModes.ADD);
   }
   
-  update(time: number, delta: number, playerPos?: { x: number; y: number }) {
+  update(time: number, delta: number, playerPos?: { x: number; y: number } | null) {
+    if (!playerPos) playerPos = this.playerPosRef;
     // 检查生命周期
     if (time - this.birthTime > this.lifespan) {
       this.destroy();
@@ -174,6 +178,7 @@ export class Bullet extends (window as any).Phaser.Physics.Arcade.Sprite {
 export class BulletPool {
   scene: any;
   pool: any;
+  playerPos: { x: number; y: number } = { x: 0, y: 0 };
   
   constructor(scene: any, maxSize: number = 500) {
     this.scene = scene;
@@ -195,11 +200,11 @@ export class BulletPool {
     graphics.generateTexture('bullet', 8, 8);
     graphics.destroy();
     
-    // 创建对象池
+    // 创建对象池（关闭 runChildUpdate，手动更新 active 子弹）
     this.pool = scene.physics.add.group({
       classType: Bullet,
       maxSize: maxSize,
-      runChildUpdate: true,
+      runChildUpdate: false,
       createCallback: (bullet: any) => {
         bullet.setActive(false);
         bullet.setVisible(false);
@@ -272,6 +277,20 @@ export class BulletPool {
     return bullets;
   }
   
+  setPlayerPos(pos: { x: number; y: number }) {
+    this.playerPos = pos;
+  }
+
+  updateAll(time: number, delta: number) {
+    const children = this.pool.children.entries;
+    for (let i = children.length - 1; i >= 0; i--) {
+      const bullet = children[i];
+      if (bullet.active) {
+        bullet.update(time, delta, this.playerPos);
+      }
+    }
+  }
+
   getPool(): any {
     return this.pool;
   }

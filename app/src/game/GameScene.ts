@@ -36,6 +36,10 @@ export class GameScene extends (window as any).Phaser.Scene {
   // 慢动作系统
   slowMotionActive: boolean = false;
   slowMotionTimer: number = 0;
+
+  // UI 更新节流
+  statsUpdateTimer: number = 0;
+  statsUpdateInterval: number = 200;
   
   // 升级系统
   upgrades = {
@@ -210,7 +214,7 @@ export class GameScene extends (window as any).Phaser.Scene {
     // 添加像素装饰块 - 随机分布
     const pixelSize = 8;
     const decorGraphics = this.add.graphics();
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i < 12; i++) {
       const x = Math.floor(Math.random() * (this.scale.width / pixelSize)) * pixelSize;
       const y = Math.floor(Math.random() * (this.scale.height / pixelSize)) * pixelSize;
       const size = pixelSize * (1 + Math.floor(Math.random() * 2));
@@ -274,11 +278,8 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.boss.update(adjustedDelta, this.player.getPosition());
     
     // 更新子弹
-    this.bulletPool.getPool().children.entries.forEach((bullet: any) => {
-      if (bullet.active) {
-        bullet.update(time, adjustedDelta, this.player.getPosition());
-      }
-    });
+    this.bulletPool.setPlayerPos(this.player.getPosition());
+    this.bulletPool.updateAll(time, adjustedDelta);
     
     // 检查玩家是否在减速区域
     this.player.slowed = this.boss.isPlayerInSlowZone(this.player.getPosition());
@@ -286,8 +287,12 @@ export class GameScene extends (window as any).Phaser.Scene {
     // 检查擦弹
     this.checkGraze();
     
-    // 更新 UI
-    this.updateStats();
+    // 节流更新 UI（每 200ms）
+    this.statsUpdateTimer += delta;
+    if (this.statsUpdateTimer >= this.statsUpdateInterval) {
+      this.statsUpdateTimer = 0;
+      this.updateStats();
+    }
   }
   
   handlePlayerBulletCollision(_playerSprite: any, bullet: any) {

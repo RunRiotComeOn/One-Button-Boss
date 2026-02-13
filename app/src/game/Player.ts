@@ -69,8 +69,12 @@ export class Player {
     graphics.generateTexture('player-pixel', 16, 16);
     graphics.destroy();
     
-    // 创建发光光圈（在精灵下方）
+    // 创建发光光圈（预绘制，之后只移动位置）
     this.glow = scene.add.graphics();
+    this.glow.fillStyle(0x00ffc8, 0.45);
+    this.glow.fillCircle(0, 0, 10);
+    this.glow.fillStyle(0x00ffff, 0.22);
+    this.glow.fillCircle(0, 0, 15);
     this.glow.setBlendMode((window as any).Phaser.BlendModes.ADD);
 
     // 创建玩家精灵 - 普通混合模式，保证始终可见
@@ -203,61 +207,41 @@ export class Player {
   }
   
   createDashTrail() {
-    // 创建像素风格拖尾效果
-    for (let i = 0; i < 5; i++) {
-      this.scene.time.delayedCall(i * 30, () => {
-        if (this.sprite && this.sprite.active) {
-          const trail = this.scene.add.graphics();
-          const alpha = 0.6 - i * 0.1;
-          
-          // 绘制像素方块拖尾
-          trail.fillStyle(0x00ffc8, alpha);
-          const size = 12 - i * 2;
-          trail.fillRect(
-            this.sprite.x - size / 2,
-            this.sprite.y - size / 2,
-            size,
-            size
-          );
-          
-          trail.setBlendMode((window as any).Phaser.BlendModes.ADD);
-          
-          // 淡出动画
-          this.scene.tweens.add({
-            targets: trail,
-            alpha: 0,
-            duration: 300,
-            onComplete: () => {
-              trail.destroy();
-            }
-          });
-        }
-      });
+    // 轻量 dash 拖尾 — 单个 graphics 一次性绘制所有方块
+    const trail = this.scene.add.graphics();
+    trail.setBlendMode((window as any).Phaser.BlendModes.ADD);
+
+    const x = this.sprite.x;
+    const y = this.sprite.y;
+    for (let i = 0; i < 3; i++) {
+      const alpha = 0.5 - i * 0.15;
+      const size = 10 - i * 2;
+      trail.fillStyle(0x00ffc8, alpha);
+      trail.fillRect(x - size / 2, y - size / 2, size, size);
     }
+
+    this.scene.tweens.add({
+      targets: trail,
+      alpha: 0,
+      duration: 250,
+      onComplete: () => trail.destroy()
+    });
   }
   
   updateTrail(delta: number) {
     this.trailTimer += delta;
-    
-    // 每100ms创建一个拖尾
-    if (this.trailTimer > 100 && (this.sprite.body?.velocity.x !== 0 || this.sprite.body?.velocity.y !== 0)) {
+
+    // 每 150ms 创建一个拖尾
+    if (this.trailTimer > 150 && (this.sprite.body?.velocity.x !== 0 || this.sprite.body?.velocity.y !== 0)) {
       this.trailTimer = 0;
-      
+
       const trail = this.scene.add.graphics();
-      trail.fillStyle(0x00ffc8, 0.3);
-      
-      // 像素方块拖尾
-      trail.fillRect(this.sprite.x - 4, this.sprite.y - 4, 8, 8);
+      trail.fillStyle(0x00ffc8, 0.25);
+      trail.fillRect(this.sprite.x - 3, this.sprite.y - 3, 6, 6);
       trail.setBlendMode((window as any).Phaser.BlendModes.ADD);
-      
-      this.scene.tweens.add({
-        targets: trail,
-        alpha: 0,
-        duration: 200,
-        onComplete: () => {
-          trail.destroy();
-        }
-      });
+
+      // 直接延迟销毁，不用 tween
+      this.scene.time.delayedCall(180, () => trail.destroy());
     }
   }
   
@@ -270,13 +254,10 @@ export class Player {
       this.sprite.setAlpha(1);
     }
 
-    // 绘制跟随玩家的发光光圈
-    this.glow.clear();
-    const pulse = Math.sin(this.scene.time.now / 400) * 0.15 + 0.45;
-    this.glow.fillStyle(0x00ffc8, pulse);
-    this.glow.fillCircle(this.sprite.x, this.sprite.y, 10);
-    this.glow.fillStyle(0x00ffff, pulse * 0.5);
-    this.glow.fillCircle(this.sprite.x, this.sprite.y, 15);
+    // 移动发光光圈跟随玩家
+    this.glow.setPosition(this.sprite.x, this.sprite.y);
+    const pulse = Math.sin(this.scene.time.now / 400) * 0.3 + 0.7;
+    this.glow.setAlpha(pulse);
 
     // 冲刺冷却时闪烁
     if (this.dashCooldownTimer > 0 && this.dashCooldownTimer < 500) {
