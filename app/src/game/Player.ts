@@ -10,6 +10,7 @@ export class Player {
   dashCooldown: number = 3000;
   dashCooldownTimer: number = 0;
   isDashing: boolean = false;
+  dashHitBoss: boolean = false;
   isInvincible: boolean = false;
   invincibleTimer: number = 0;
   invincibleDuration: number = 2000;
@@ -173,6 +174,7 @@ export class Player {
   
   dash(mousePointer: any) {
     this.isDashing = true;
+    this.dashHitBoss = false;
     this.isInvincible = true;
     
     // 计算冲刺方向（朝向鼠标）
