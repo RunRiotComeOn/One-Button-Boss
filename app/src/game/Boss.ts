@@ -140,7 +140,7 @@ export class Boss {
   
   updatePhase() {
     const healthPercent = this.health / this.maxHealth;
-    let newPhase = BossPhase.PHASE_1;
+    let newPhase: number = BossPhase.PHASE_1;
 
     if (healthPercent > 0.7) {
       newPhase = BossPhase.PHASE_1;
