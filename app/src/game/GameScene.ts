@@ -326,14 +326,13 @@ export class GameScene extends (window as any).Phaser.Scene {
   }
   
   handlePlayerBossCollision() {
-    // 冲刺穿过 Boss 造成伤害（每次 dash 只判定一次）
-    if (this.player.isDashing && this.player.isInvincible && !this.player.dashHitBoss) {
-      this.player.dashHitBoss = true;
-
+    // 冲刺穿过 Boss 造成伤害（每帧触发）
+    if (this.player.isDashing && this.player.isInvincible) {
       const isDead = this.boss.takeDamage(5);
 
-      // 生命偷取 - 回复半格血
-      if (this.upgrades.lifeSteal) {
+      // 生命偷取 - 每次 dash 只回一次半格血
+      if (this.upgrades.lifeSteal && !this.player.dashHitBoss) {
+        this.player.dashHitBoss = true;
         this.player.heal(0.5);
       }
 
