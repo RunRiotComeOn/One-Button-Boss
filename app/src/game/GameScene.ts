@@ -534,12 +534,10 @@ export class GameScene extends (window as any).Phaser.Scene {
   applyUpgrade(type: string) {
     switch (type) {
       case 'dash-cooldown':
-        this.upgrades.dashCooldownReduction += 0.2;
-        this.player.dashCooldown *= (1 - this.upgrades.dashCooldownReduction);
+        this.player.dashCooldown *= 0.8;
         break;
       case 'dash-distance':
-        this.upgrades.dashDistanceIncrease += 0.3;
-        this.player.dashSpeed *= (1 + this.upgrades.dashDistanceIncrease);
+        this.player.dashSpeed *= 1.3;
         break;
       case 'graze-score':
         this.upgrades.grazeScoreMultiplier *= 2;
