@@ -3,6 +3,7 @@ import type { GameStats } from './GameScene';
 interface GameUIProps {
   stats: GameStats;
   isGameOver: boolean;
+  isVictory: boolean;
   isPaused: boolean;
   onRestart: () => void;
   onPause: () => void;
@@ -22,6 +23,7 @@ const UPGRADES = [
 export const GameUI: React.FC<GameUIProps> = ({
   stats,
   isGameOver,
+  isVictory,
   isPaused,
   onRestart,
   onPause,
@@ -53,6 +55,72 @@ export const GameUI: React.FC<GameUIProps> = ({
       default: return '#ffffff';
     }
   };
+
+  if (isVictory) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-[#0a0a0f]/95 z-50 font-mono">
+        <div className="text-center">
+          <h1
+            className="text-5xl font-bold mb-6 text-[#00ffc8] uppercase tracking-widest"
+            style={{ fontFamily: '"Press Start 2P", monospace', textShadow: '4px 4px 0 #000, 6px 6px 0 rgba(0,255,200,0.5)' }}
+          >
+            VICTORY!
+          </h1>
+
+          <div
+            className="bg-[#1a1a2e] border-2 border-[#00ffc8] p-6 mb-8"
+            style={{ boxShadow: '6px 6px 0 rgba(0, 255, 200, 0.3)', imageRendering: 'pixelated' }}
+          >
+            <div className="grid grid-cols-3 gap-6 text-center">
+              <div>
+                <p className="text-gray-400 text-xs mb-1 uppercase tracking-wider">Score</p>
+                <p className="text-2xl font-bold text-[#00ffc8]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                  {stats.score.toLocaleString()}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1 uppercase tracking-wider">Time</p>
+                <p className="text-2xl font-bold text-[#ffff00]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                  {formatTime(stats.time)}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-xs mb-1 uppercase tracking-wider">Graze</p>
+                <p className="text-2xl font-bold text-[#ff00ff]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                  {stats.grazeCount}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={onRestart}
+              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              style={{
+                fontFamily: '"Press Start 2P", monospace',
+                boxShadow: '4px 4px 0 #00ffc8',
+                imageRendering: 'pixelated'
+              }}
+            >
+              PLAY AGAIN
+            </button>
+            <button
+              onClick={onBackToMenu}
+              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              style={{
+                fontFamily: '"Press Start 2P", monospace',
+                boxShadow: '4px 4px 0 #ff0066',
+                imageRendering: 'pixelated'
+              }}
+            >
+              MENU
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (showUpgrade) {
     return (
@@ -130,17 +198,30 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           </div>
           
-          <button
-            onClick={onRestart}
-            className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
-            style={{ 
-              fontFamily: '"Press Start 2P", monospace',
-              boxShadow: '4px 4px 0 #00ffc8',
-              imageRendering: 'pixelated'
-            }}
-          >
-            TRY AGAIN
-          </button>
+          <div className="flex flex-col gap-4">
+            <button
+              onClick={onRestart}
+              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              style={{
+                fontFamily: '"Press Start 2P", monospace',
+                boxShadow: '4px 4px 0 #00ffc8',
+                imageRendering: 'pixelated'
+              }}
+            >
+              TRY AGAIN
+            </button>
+            <button
+              onClick={onBackToMenu}
+              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              style={{
+                fontFamily: '"Press Start 2P", monospace',
+                boxShadow: '4px 4px 0 #ff0066',
+                imageRendering: 'pixelated'
+              }}
+            >
+              MENU
+            </button>
+          </div>
         </div>
       </div>
     );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 interface MainMenuProps {
-  onStartGame: () => void;
+  onStartGame: (mode: 'normal' | 'endless') => void;
 }
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
@@ -286,7 +286,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
         {/* Game Mode Selection - Pixel Style */}
         <div className="flex flex-col md:flex-row gap-6 justify-center mb-8">
           <button
-            onClick={() => onStartGame()}
+            onClick={() => onStartGame('normal')}
             onMouseEnter={() => setHoveredMode('normal')}
             onMouseLeave={() => setHoveredMode(null)}
             className="group relative px-8 py-6 bg-[#1a1a2e] border-2 border-[#00ffc8] transition-all duration-200 hover:translate-x-1 hover:translate-y-1"
@@ -305,7 +305,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame }) => {
           </button>
           
           <button
-            onClick={() => onStartGame()}
+            onClick={() => onStartGame('endless')}
             onMouseEnter={() => setHoveredMode('endless')}
             onMouseLeave={() => setHoveredMode(null)}
             className="group relative px-8 py-6 bg-[#1a1a2e] border-2 border-[#ff00ff] transition-all duration-200 hover:translate-x-1 hover:translate-y-1"

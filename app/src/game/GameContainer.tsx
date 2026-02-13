@@ -3,10 +3,11 @@ import type { GameStats } from './GameScene';
 import { GameUI } from './GameUI';
 
 interface GameContainerProps {
+  mode: 'normal' | 'endless';
   onBackToMenu?: () => void;
 }
 
-export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) => {
+export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu }) => {
   const gameRef = useRef<any>(null);
   const sceneRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -21,9 +22,11 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
   });
   
   const [isGameOver, setIsGameOver] = useState(false);
+  const [isVictory, setIsVictory] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
   const [wave, setWave] = useState(1);
+  const waveRef = useRef(1);
 
   useEffect(() => {
     if (!containerRef.current || !(window as any).Phaser) return;
@@ -79,7 +82,11 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
           };
           
           scene.onBossDefeated = () => {
-            setShowUpgrade(true);
+            if (mode === 'normal' && waveRef.current >= 3) {
+              setIsVictory(true);
+            } else {
+              setShowUpgrade(true);
+            }
           };
         }
       }, 100);
@@ -95,9 +102,11 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
       sceneRef.current.restart();
     }
     setIsGameOver(false);
+    setIsVictory(false);
     setIsPaused(false);
     setShowUpgrade(false);
     setWave(1);
+    waveRef.current = 1;
   }, []);
 
   const handlePause = useCallback(() => {
@@ -129,6 +138,8 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
       sceneRef.current.resume();
     }
     setShowUpgrade(false);
+    setWave(w => w + 1);
+    waveRef.current += 1;
   }, []);
 
   return (
@@ -164,6 +175,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
       <GameUI
         stats={stats}
         isGameOver={isGameOver}
+        isVictory={isVictory}
         isPaused={isPaused}
         onRestart={handleRestart}
         onPause={handlePause}
@@ -174,7 +186,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({ onBackToMenu }) =>
       />
       
       {/* Wave Indicator - Pixel Style */}
-      {!isGameOver && !showUpgrade && (
+      {!isGameOver && !isVictory && !showUpgrade && (
         <div 
           className="absolute top-4 left-1/2 -translate-x-1/2 bg-[#1a1a2e] border-2 border-[#ff00ff] px-3 py-2"
           style={{ boxShadow: '3px 3px 0 rgba(255, 0, 255, 0.3)', imageRendering: 'pixelated' }}

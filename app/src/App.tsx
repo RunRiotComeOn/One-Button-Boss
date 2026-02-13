@@ -4,11 +4,14 @@ import { GameContainer } from './game/GameContainer';
 import './App.css';
 
 type GameState = 'menu' | 'playing';
+type GameMode = 'normal' | 'endless';
 
 function App() {
   const [gameState, setGameState] = useState<GameState>('menu');
+  const [gameMode, setGameMode] = useState<GameMode>('normal');
 
-  const handleStartGame = () => {
+  const handleStartGame = (mode: GameMode) => {
+    setGameMode(mode);
     setGameState('playing');
   };
 
@@ -21,7 +24,7 @@ function App() {
       {gameState === 'menu' ? (
         <MainMenu onStartGame={handleStartGame} />
       ) : (
-        <GameContainer onBackToMenu={handleBackToMenu} />
+        <GameContainer mode={gameMode} onBackToMenu={handleBackToMenu} />
       )}
     </div>
   );
