@@ -116,28 +116,28 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
               </h3>
               <ul className="space-y-3 text-gray-300 font-mono text-sm">
                 <li className="flex items-start gap-3">
-                  <span className="text-[#ff0066] font-bold">></span>
+                  <span className="text-[#ff0066] font-bold">&gt;</span>
                   <div>
                     <strong className="text-[#ff0066]">Dash Attack</strong>
                     <p className="text-xs text-gray-400">Dash through the boss to deal damage</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#00ffc8] font-bold">></span>
+                  <span className="text-[#00ffc8] font-bold">&gt;</span>
                   <div>
                     <strong className="text-[#00ffc8]">Graze</strong>
                     <p className="text-xs text-gray-400">Fly close to bullets for bonus score</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#ffff00] font-bold">></span>
+                  <span className="text-[#ffff00] font-bold">&gt;</span>
                   <div>
                     <strong className="text-[#ffff00]">I-Frames</strong>
                     <p className="text-xs text-gray-400">2s invincibility after taking damage</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-[#ff00ff] font-bold">></span>
+                  <span className="text-[#ff00ff] font-bold">&gt;</span>
                   <div>
                     <strong className="text-[#ff00ff]">Upgrades</strong>
                     <p className="text-xs text-gray-400">Choose a power-up between waves</p>
