@@ -10,6 +10,8 @@ export class Player {
   dashCooldownTimer: number = 0;
   isDashing: boolean = false;
   isInvincible: boolean = false;
+  invincibleTimer: number = 0;
+  invincibleDuration: number = 2000;
   
   // 拖尾效果
   trail: any[] = [];
@@ -92,7 +94,18 @@ export class Player {
     if (this.grazeTimer > 0) {
       this.grazeTimer -= delta;
     }
-    
+
+    // i-frame timer
+    if (this.invincibleTimer > 0) {
+      this.invincibleTimer -= delta;
+      if (this.invincibleTimer <= 0) {
+        this.invincibleTimer = 0;
+        if (!this.isDashing) {
+          this.isInvincible = false;
+        }
+      }
+    }
+
     // 如果不是冲刺状态，正常移动
     if (!this.isDashing) {
       this.handleMovement(cursors, mousePointer);
@@ -162,9 +175,11 @@ export class Player {
       this.sprite.setVelocity(0, 0);
     });
     
-    // 无敌结束
+    // 无敌结束（don't clear if i-frame timer is still active）
     this.scene.time.delayedCall(this.dashDuration, () => {
-      this.isInvincible = false;
+      if (this.invincibleTimer <= 0) {
+        this.isInvincible = false;
+      }
     });
     
     // 设置冷却
@@ -231,8 +246,13 @@ export class Player {
   }
   
   updateGlow(_delta: number) {
-    // 精灵始终完全不透明
-    this.sprite.setAlpha(1);
+    // Flash sprite during i-frames, otherwise full opacity
+    if (this.invincibleTimer > 0) {
+      const flash = Math.floor(this.scene.time.now / 100) % 2;
+      this.sprite.setAlpha(flash === 0 ? 0.3 : 1.0);
+    } else {
+      this.sprite.setAlpha(1);
+    }
 
     // 绘制跟随玩家的发光光圈
     this.glow.clear();
@@ -253,9 +273,13 @@ export class Player {
   
   takeDamage(): boolean {
     if (this.isInvincible) return false;
-    
+
     this.health--;
-    
+
+    // Activate i-frames
+    this.isInvincible = true;
+    this.invincibleTimer = this.invincibleDuration;
+
     // 受伤闪烁 - 像素风格
     this.scene.tweens.add({
       targets: this.sprite,

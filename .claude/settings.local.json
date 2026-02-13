@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix: improve player visibility with SCREEN blend mode and stronger glow\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git push:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix: use normal blend mode + glow circle for player visibility\n\nRemove SCREEN/ADD blend mode from sprite, keep alpha at 1 so the\nplayer is always fully visible. Add a pulsing glow circle underneath\nfor the neon effect.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(gh run list:*)",
+      "Bash(git rm:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix: remove pre-built dist from repo, add .gitignore\n\nThe old dist folder was committed and tracked, so GitHub Actions\nwas serving stale build artifacts. Now dist is gitignored and\nActions will build fresh from source on each deploy.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(npm run build:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx:*)",
+      "Bash(npm ci:*)",
+      "Bash(./node_modules/.bin/tsc:*)",
+      "Bash(./node_modules/.bin/vite build:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nFix: use Node 22 in workflow \\(Vite 7 requires Node 20.19+\\)\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git commit:*)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" status)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" diff)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" log --oneline -5)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" add app/src/game/GameContainer.tsx app/src/game/GameScene.ts app/src/game/GameUI.tsx)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" commit -m \"$\\(cat <<''EOF''\nPause game during upgrade selection and move menu into pause screen\n\n- Pause game and clear bullets when boss is defeated so player is safe during skill selection\n- Resume game after player picks an upgrade\n- Remove redundant isDead\\(\\) check that fired onBossDefeated every frame\n- Move menu button from standalone into the pause overlay \\(Resume / Menu\\)\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" push)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" diff --name-only)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" checkout -- app/src/game/GameContainer.tsx app/src/game/GameScene.ts)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" diff --stat)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" log --oneline -3)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" add app/src/App.tsx app/src/game/GameContainer.tsx app/src/game/GameUI.tsx app/src/game/MainMenu.tsx)",
+      "Bash(git -C \"C:\\\\Users\\\\sophi\\\\Desktop\\\\one_button_boss\" commit -m \"$\\(cat <<''EOF''\nAdd normal/endless mode distinction, victory screen, and wave counter\n\n- Normal mode: 3 waves to win, shows victory screen with stats\n- Endless mode: infinite waves with wave counter incrementing\n- Pass game mode from MainMenu through App to GameContainer\n- Add victory screen with PLAY AGAIN and MENU buttons\n- Add MENU button to game over screen\n- Fix wave counter never incrementing after boss defeat\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(dir:*)",
+      "Bash(npm install:*)",
+      "Bash(gh secret set:*)",
+      "Bash(where:*)"
+    ]
+  }
+}

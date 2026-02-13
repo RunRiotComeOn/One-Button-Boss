@@ -9,6 +9,8 @@ export interface GameStats {
   health: number;
   bossHealth: number;
   bossPhase: number;
+  dashCooldown: number;
+  dashCooldownMax: number;
 }
 
 export class GameScene extends (window as any).Phaser.Scene {
@@ -516,7 +518,9 @@ export class GameScene extends (window as any).Phaser.Scene {
         time: this.gameTime,
         health: this.player.health,
         bossHealth: this.boss.health,
-        bossPhase: this.boss.getPhase()
+        bossPhase: this.boss.getPhase(),
+        dashCooldown: this.player.dashCooldownTimer,
+        dashCooldownMax: this.player.dashCooldown
       });
     }
   }

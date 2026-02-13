@@ -19,7 +19,9 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
     time: 0,
     health: 3,
     bossHealth: 100,
-    bossPhase: 1
+    bossPhase: 1,
+    dashCooldown: 0,
+    dashCooldownMax: 3000
   });
   
   const [isGameOver, setIsGameOver] = useState(false);
@@ -150,6 +152,10 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
 
       // 恢复游戏
       sceneRef.current.resume();
+
+      // 选完技能后给 3 秒无敌
+      sceneRef.current.player.isInvincible = true;
+      sceneRef.current.player.invincibleTimer = 3000;
     }
     setShowUpgrade(false);
     setWave(w => w + 1);
