@@ -419,54 +419,8 @@ export const GameUI: React.FC<GameUIProps> = ({
       
       {/* Bottom HUD */}
       <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-between items-end pointer-events-none font-mono">
-        {/* Player Health + Dash Cooldown */}
+        {/* Player Health */}
         <div className="flex items-end gap-3">
-          {/* Dash Cooldown Indicator */}
-          {(() => {
-            const ready = stats.dashCooldown <= 0;
-            const progress = ready ? 1 : Math.max(0, (stats.dashCooldownMax - stats.dashCooldown) / stats.dashCooldownMax);
-            const radius = 13;
-            const circumference = 2 * Math.PI * radius;
-            const offset = circumference * (1 - progress);
-            return (
-              <div className="flex flex-col items-center" style={{ marginBottom: '-2px' }}>
-                <svg
-                  width="32" height="32" viewBox="0 0 32 32"
-                  style={{
-                    filter: ready ? 'drop-shadow(0 0 6px #00ffc8) drop-shadow(0 0 12px #00ffc8)' : 'none',
-                    animation: ready ? 'dashPulse 1.2s ease-in-out infinite' : 'none'
-                  }}
-                >
-                  {/* Background ring */}
-                  <circle cx="16" cy="16" r={radius} fill="none" stroke="#1a1a2e" strokeWidth="3" />
-                  {/* Progress arc */}
-                  <circle
-                    cx="16" cy="16" r={radius} fill="none"
-                    stroke="#00ffc8"
-                    strokeWidth="3"
-                    strokeDasharray={circumference}
-                    strokeDashoffset={offset}
-                    strokeLinecap="butt"
-                    transform="rotate(-90 16 16)"
-                    style={{ transition: 'stroke-dashoffset 0.05s linear' }}
-                  />
-                  {ready && (
-                    <circle cx="16" cy="16" r={radius - 2} fill="none" stroke="#00ffc8" strokeWidth="1" opacity="0.3" />
-                  )}
-                </svg>
-                <span className="text-[8px] uppercase tracking-wider mt-0.5" style={{ color: ready ? '#00ffc8' : '#666' }}>
-                  DASH
-                </span>
-                <style>{`
-                  @keyframes dashPulse {
-                    0%, 100% { filter: drop-shadow(0 0 4px #00ffc8) drop-shadow(0 0 8px #00ffc8); }
-                    50% { filter: drop-shadow(0 0 8px #00ffc8) drop-shadow(0 0 16px #00ffff); }
-                  }
-                `}</style>
-              </div>
-            );
-          })()}
-
           {/* Player Health - Pixel Hearts */}
           <div className="flex items-center gap-2">
             <span className="text-xs text-gray-400 uppercase tracking-wider mr-2">HP</span>

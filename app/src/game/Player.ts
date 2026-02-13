@@ -21,6 +21,7 @@ export class Player {
 
   // 发光光圈
   glow: any;
+  cooldownRing: any;
   
   // 生命值
   maxHealth: number = 3;
@@ -82,6 +83,10 @@ export class Player {
     this.sprite.setSize(12, 12);
     this.sprite.setCollideWorldBounds(true);
     this.sprite.setDrag(0.9);
+
+    // 创建冷却圆环（在精灵上方）
+    this.cooldownRing = scene.add.graphics();
+    this.cooldownRing.setDepth(10);
 
     // 初始化拖尾数组
     this.trail = [];
@@ -285,6 +290,35 @@ export class Player {
     } else {
       this.sprite.setTint(0x00ffc8);
     }
+
+    // 冲刺冷却圆环
+    this.cooldownRing.clear();
+    const ringRadius = 16;
+    if (this.dashCooldownTimer > 0) {
+      // 冷却中：绘制进度圆弧
+      const progress = 1 - this.dashCooldownTimer / this.dashCooldown;
+      const startAngle = -Math.PI / 2;
+      const endAngle = startAngle + progress * Math.PI * 2;
+
+      // 背景暗环
+      this.cooldownRing.lineStyle(2, 0x333333, 0.5);
+      this.cooldownRing.beginPath();
+      this.cooldownRing.arc(this.sprite.x, this.sprite.y, ringRadius, 0, Math.PI * 2);
+      this.cooldownRing.strokePath();
+
+      // 进度亮环
+      this.cooldownRing.lineStyle(2, 0x00ffc8, 0.8);
+      this.cooldownRing.beginPath();
+      this.cooldownRing.arc(this.sprite.x, this.sprite.y, ringRadius, startAngle, endAngle);
+      this.cooldownRing.strokePath();
+    } else {
+      // 就绪：完整亮环 + 脉冲
+      const ringPulse = Math.sin(this.scene.time.now / 300) * 0.3 + 0.7;
+      this.cooldownRing.lineStyle(2, 0x00ffc8, ringPulse);
+      this.cooldownRing.beginPath();
+      this.cooldownRing.arc(this.sprite.x, this.sprite.y, ringRadius, 0, Math.PI * 2);
+      this.cooldownRing.strokePath();
+    }
   }
   
   takeDamage(amount: number = 1): boolean {
@@ -334,6 +368,7 @@ export class Player {
   
   destroy() {
     this.glow.destroy();
+    this.cooldownRing.destroy();
     this.sprite.destroy();
   }
 }
