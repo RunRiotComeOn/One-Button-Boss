@@ -192,16 +192,16 @@ export class GameScene extends (window as any).Phaser.Scene {
     bg.fillStyle(0x0a0a0f, 1);
     bg.fillRect(0, 0, this.scale.width, this.scale.height);
     
-    // 像素网格 - 小格子
-    const pixelSize = 8;
+    // 像素网格 - 稀疏格子（性能优化）
+    const gridSize = 32;
     const gridGraphics = this.add.graphics();
-    gridGraphics.lineStyle(1, 0x00ffc8, 0.15);
-    
-    for (let x = 0; x <= this.scale.width; x += pixelSize) {
+    gridGraphics.lineStyle(1, 0x00ffc8, 0.12);
+
+    for (let x = 0; x <= this.scale.width; x += gridSize) {
       gridGraphics.moveTo(x, 0);
       gridGraphics.lineTo(x, this.scale.height);
     }
-    for (let y = 0; y <= this.scale.height; y += pixelSize) {
+    for (let y = 0; y <= this.scale.height; y += gridSize) {
       gridGraphics.moveTo(0, y);
       gridGraphics.lineTo(this.scale.width, y);
     }

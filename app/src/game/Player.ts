@@ -1,7 +1,8 @@
 export class Player {
   sprite: any;
   scene: any;
-  
+  keys: { W: any; A: any; S: any; D: any } | null = null;
+
   // 玩家属性
   speed: number = 200;
   dashSpeed: number = 600;
@@ -84,6 +85,14 @@ export class Player {
 
     // 初始化拖尾数组
     this.trail = [];
+
+    // 缓存 WASD 按键
+    this.keys = {
+      W: scene.input.keyboard.addKey('W'),
+      A: scene.input.keyboard.addKey('A'),
+      S: scene.input.keyboard.addKey('S'),
+      D: scene.input.keyboard.addKey('D')
+    };
   }
   
   update(delta: number, cursors: any, spaceKey: any, mousePointer: any) {
@@ -129,15 +138,15 @@ export class Player {
     let vy = 0;
     
     // WASD 移动
-    if (cursors.left?.isDown || this.scene.input.keyboard?.addKey('A').isDown) {
+    if (cursors.left?.isDown || this.keys?.A.isDown) {
       vx = -this.speed;
-    } else if (cursors.right?.isDown || this.scene.input.keyboard?.addKey('D').isDown) {
+    } else if (cursors.right?.isDown || this.keys?.D.isDown) {
       vx = this.speed;
     }
-    
-    if (cursors.up?.isDown || this.scene.input.keyboard?.addKey('W').isDown) {
+
+    if (cursors.up?.isDown || this.keys?.W.isDown) {
       vy = -this.speed;
-    } else if (cursors.down?.isDown || this.scene.input.keyboard?.addKey('S').isDown) {
+    } else if (cursors.down?.isDown || this.keys?.S.isDown) {
       vy = this.speed;
     }
     
@@ -230,8 +239,8 @@ export class Player {
   updateTrail(delta: number) {
     this.trailTimer += delta;
     
-    // 每50ms创建一个拖尾
-    if (this.trailTimer > 50 && (this.sprite.body?.velocity.x !== 0 || this.sprite.body?.velocity.y !== 0)) {
+    // 每100ms创建一个拖尾
+    if (this.trailTimer > 100 && (this.sprite.body?.velocity.x !== 0 || this.sprite.body?.velocity.y !== 0)) {
       this.trailTimer = 0;
       
       const trail = this.scene.add.graphics();
