@@ -268,29 +268,43 @@ export class GameScene extends (window as any).Phaser.Scene {
   createHealthDropTexture() {
     const g = this.add.graphics();
     const p = 2; // pixel size
-    // 水滴形状 - 像素风 (9x12 grid, each cell = 2px)
-    g.fillStyle(0x00ff66, 1);
-    // 尖顶
-    g.fillRect(4 * p, 0 * p, 1 * p, 1 * p);
-    // 第2行
-    g.fillRect(3 * p, 1 * p, 3 * p, 1 * p);
-    // 第3行
-    g.fillRect(2 * p, 2 * p, 5 * p, 1 * p);
-    // 第4-6行 (宽体)
-    g.fillRect(1 * p, 3 * p, 7 * p, 1 * p);
-    g.fillRect(1 * p, 4 * p, 7 * p, 1 * p);
-    g.fillRect(1 * p, 5 * p, 7 * p, 1 * p);
-    // 第7行
-    g.fillRect(1 * p, 6 * p, 7 * p, 1 * p);
-    // 第8行
-    g.fillRect(2 * p, 7 * p, 5 * p, 1 * p);
-    // 第9行 (底部)
-    g.fillRect(3 * p, 8 * p, 3 * p, 1 * p);
-    // 高光
-    g.fillStyle(0xaaffcc, 0.7);
-    g.fillRect(3 * p, 2 * p, 1 * p, 1 * p);
-    g.fillRect(2 * p, 3 * p, 2 * p, 2 * p);
-    g.generateTexture('health-drop', 9 * p, 9 * p);
+    // 水滴形状 - 尖顶，肚子偏下，底部圆润
+    g.fillStyle(0x00cc55, 1);
+    // row 0: 尖顶 1px
+    g.fillRect(4 * p, 0, 1 * p, p);
+    // row 1: 3px
+    g.fillRect(3 * p, 1 * p, 3 * p, p);
+    // row 2: 3px
+    g.fillRect(3 * p, 2 * p, 3 * p, p);
+    // row 3: 5px
+    g.fillRect(2 * p, 3 * p, 5 * p, p);
+    // row 4: 5px
+    g.fillRect(2 * p, 4 * p, 5 * p, p);
+    // row 5: 7px (开始变宽)
+    g.fillRect(1 * p, 5 * p, 7 * p, p);
+    // row 6-8: 9px (最宽 - 肚子)
+    g.fillRect(0, 6 * p, 9 * p, p);
+    g.fillRect(0, 7 * p, 9 * p, p);
+    g.fillRect(0, 8 * p, 9 * p, p);
+    // row 9: 7px
+    g.fillRect(1 * p, 9 * p, 7 * p, p);
+    // row 10: 5px
+    g.fillRect(2 * p, 10 * p, 5 * p, p);
+    // row 11: 3px (底部收圆)
+    g.fillRect(3 * p, 11 * p, 3 * p, p);
+
+    // 光泽高光 - 左上亮斑
+    g.fillStyle(0xaaffcc, 0.6);
+    g.fillRect(3 * p, 3 * p, 1 * p, p);
+    g.fillRect(2 * p, 5 * p, 1 * p, p);
+    g.fillRect(2 * p, 6 * p, 2 * p, p);
+    g.fillRect(2 * p, 7 * p, 1 * p, p);
+    // 白色高光点
+    g.fillStyle(0xffffff, 0.5);
+    g.fillRect(3 * p, 4 * p, 1 * p, p);
+    g.fillRect(2 * p, 6 * p, 1 * p, p);
+
+    g.generateTexture('health-drop', 9 * p, 12 * p);
     g.destroy();
   }
 
