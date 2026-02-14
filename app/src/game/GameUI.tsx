@@ -237,10 +237,10 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           ) : null}
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-row gap-4 justify-center">
             <button
               onClick={onRestart}
-              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              className="px-5 py-3 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
               style={{
                 fontFamily: '"Press Start 2P", monospace',
                 boxShadow: '4px 4px 0 #00ffc8',
@@ -251,7 +251,7 @@ export const GameUI: React.FC<GameUIProps> = ({
             </button>
             <button
               onClick={onBackToMenu}
-              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              className="px-5 py-3 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
               style={{
                 fontFamily: '"Press Start 2P", monospace',
                 boxShadow: '4px 4px 0 #ff0066',
@@ -382,10 +382,10 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           ) : null}
 
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-row gap-4 justify-center">
             <button
               onClick={onRestart}
-              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              className="px-5 py-3 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
               style={{
                 fontFamily: '"Press Start 2P", monospace',
                 boxShadow: '4px 4px 0 #00ffc8',
@@ -396,7 +396,7 @@ export const GameUI: React.FC<GameUIProps> = ({
             </button>
             <button
               onClick={onBackToMenu}
-              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              className="px-5 py-3 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
               style={{
                 fontFamily: '"Press Start 2P", monospace',
                 boxShadow: '4px 4px 0 #ff0066',
@@ -435,7 +435,7 @@ export const GameUI: React.FC<GameUIProps> = ({
             </button>
             <button
               onClick={onBackToMenu}
-              className="px-8 py-4 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
+              className="px-5 py-3 bg-[#1a1a2e] border-2 border-[#ff0066] text-[#ff0066] hover:bg-[#ff0066] hover:text-[#0a0a0f] font-bold uppercase tracking-widest transition-all duration-200"
               style={{
                 fontFamily: '"Press Start 2P", monospace',
                 boxShadow: '4px 4px 0 #ff0066',
