@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { GameStats } from './GameScene';
-import type { RankDisplayRow } from '../lib/supabase';
+import { fetchRankPreview, type RankDisplayRow } from '../lib/supabase';
 
 interface RankContext {
   rows: RankDisplayRow[];
@@ -18,9 +18,10 @@ interface GameUIProps {
   showUpgrade: boolean;
   onUpgrade: (type: string) => void;
   onBackToMenu?: () => void;
-  onSubmitScore?: (name: string) => Promise<RankContext | null>;
+  onSubmitScore?: (name: string) => Promise<boolean>;
   showHealEffect?: boolean;
   mode?: 'normal' | 'endless';
+  wave?: number;
 }
 
 const UPGRADES = [
@@ -43,21 +44,32 @@ export const GameUI: React.FC<GameUIProps> = ({
   onBackToMenu,
   onSubmitScore,
   showHealEffect,
-  mode
+  mode,
+  wave
 }) => {
   const [nickname, setNickname] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [rankContext, setRankContext] = useState<RankContext | null>(null);
 
+  // 结算界面出现时立即加载排名预览
+  useEffect(() => {
+    const showEndScreen = isVictory || isGameOver;
+    if (!showEndScreen || !mode) return;
+    // normal 模式只有 victory 才显示排名, endless 模式 game over 显示
+    const shouldPreview = (mode === 'normal' && isVictory) || (mode !== 'normal' && isGameOver);
+    if (!shouldPreview) return;
+
+    fetchRankPreview(mode, stats.score, wave ?? 1).then(result => {
+      if (result) setRankContext(result);
+    });
+  }, [isVictory, isGameOver, mode, stats.score, wave]);
+
   const handleSubmit = async () => {
     if (!nickname.trim() || !onSubmitScore || submitting) return;
     setSubmitting(true);
-    const result = await onSubmitScore(nickname.trim());
-    if (result) {
-      setRankContext(result);
-      setSubmitted(true);
-    }
+    const success = await onSubmitScore(nickname.trim());
+    if (success) setSubmitted(true);
     setSubmitting(false);
   };
 
@@ -185,6 +197,9 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           </div>
 
+          {/* Rank Preview */}
+          {renderRankContext()}
+
           {/* Score Submission */}
           {onSubmitScore && !submitted ? (
             <div
@@ -215,7 +230,11 @@ export const GameUI: React.FC<GameUIProps> = ({
               </div>
             </div>
           ) : submitted ? (
-            renderRankContext()
+            <div className="mb-6 text-center">
+              <p className="text-[#ffff00] text-xs uppercase tracking-wider" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                SCORE SUBMITTED!
+              </p>
+            </div>
           ) : null}
 
           <div className="flex flex-col gap-4">
@@ -323,6 +342,9 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           </div>
           
+          {/* Rank Preview - only for endless mode on game over */}
+          {mode !== 'normal' && renderRankContext()}
+
           {/* Score Submission - only for endless mode on game over */}
           {mode !== 'normal' && onSubmitScore && !submitted ? (
             <div
@@ -353,7 +375,11 @@ export const GameUI: React.FC<GameUIProps> = ({
               </div>
             </div>
           ) : mode !== 'normal' && submitted ? (
-            renderRankContext()
+            <div className="mb-6 text-center">
+              <p className="text-[#ffff00] text-xs uppercase tracking-wider" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+                SCORE SUBMITTED!
+              </p>
+            </div>
           ) : null}
 
           <div className="flex flex-col gap-4">
@@ -545,10 +571,10 @@ export const GameUI: React.FC<GameUIProps> = ({
         </div>
       </div>
       
-      {/* Pause Button - Top Right */}
+      {/* Pause Button - Top Right Corner */}
       <button
         onClick={onPause}
-        className="absolute top-16 right-4 w-10 h-10 bg-[#1a1a2e] border-2 border-gray-600 hover:border-[#00ffc8] flex items-center justify-center transition-all duration-200"
+        className="absolute top-4 right-4 w-10 h-10 bg-[#1a1a2e] border-2 border-gray-600 hover:border-[#00ffc8] flex items-center justify-center transition-all duration-200 z-20"
         style={{ boxShadow: '3px 3px 0 #333', imageRendering: 'pixelated' }}
       >
         <div className="flex gap-1">

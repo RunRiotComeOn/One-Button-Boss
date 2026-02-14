@@ -85,7 +85,7 @@ export interface RankDisplayRow {
   isEllipsis?: boolean;
 }
 
-export async function fetchRankContext(mode: 'normal' | 'endless', playerName: string): Promise<{ rows: RankDisplayRow[]; playerRank: number } | null> {
+export async function fetchRankPreview(mode: 'normal' | 'endless', playerScore: number, playerWave: number): Promise<{ rows: RankDisplayRow[]; playerRank: number } | null> {
   if (!supabase) return null;
   const sortField = mode === 'normal' ? 'score' : 'wave';
   const { data } = await supabase
@@ -95,56 +95,79 @@ export async function fetchRankContext(mode: 'normal' | 'endless', playerName: s
     .order(sortField, { ascending: false });
   if (!data) return null;
 
-  const normalized = playerName.toLowerCase();
-  const idx = data.findIndex(e => e.player_name === normalized);
-  if (idx === -1) return null;
+  // 计算玩家会排在第几名（虚拟插入）
+  const playerValue = mode === 'normal' ? playerScore : playerWave;
+  let idx = data.findIndex(e => playerValue >= (mode === 'normal' ? e.score : e.wave));
+  if (idx === -1) idx = data.length; // 排最后
 
   const playerRank = idx + 1;
   const rows: RankDisplayRow[] = [];
+  const ellipsis: RankDisplayRow = { rank: 0, player_name: '', score: 0, graze_count: 0, wave: 0, time_ms: 0, isEllipsis: true };
 
-  const toRow = (entry: LeaderboardEntry, rank: number, isPlayer = false): RankDisplayRow => ({
+  const toRow = (entry: LeaderboardEntry, rank: number): RankDisplayRow => ({
     rank,
     player_name: entry.player_name,
     score: entry.score,
     graze_count: entry.graze_count,
     wave: entry.wave,
     time_ms: entry.time_ms,
-    isPlayer,
   });
 
-  // Always show top 3
-  const top3 = Math.min(3, data.length);
-  for (let i = 0; i < top3; i++) {
-    rows.push(toRow(data[i], i + 1, i === idx));
+  const playerRow: RankDisplayRow = {
+    rank: playerRank,
+    player_name: 'YOU',
+    score: playerScore,
+    graze_count: 0,
+    wave: playerWave,
+    time_ms: 0,
+    isPlayer: true,
+  };
+
+  // 插入玩家后，原来 idx 及之后的人排名 +1
+  const getRank = (origIdx: number) => origIdx < idx ? origIdx + 1 : origIdx + 2;
+
+  // Always show top 3 (accounting for player insertion)
+  const top3End = Math.min(3, data.length + 1); // total entries including player
+  let dataPtr = 0;
+  for (let rank = 1; rank <= top3End; rank++) {
+    if (rank === playerRank) {
+      rows.push(playerRow);
+    } else {
+      if (dataPtr < data.length) {
+        rows.push(toRow(data[dataPtr], rank));
+        dataPtr++;
+      }
+    }
   }
 
-  if (idx < 3) {
-    // Player is in top 3, also show rank 4 if exists
-    if (data.length > 3) {
-      rows.push(toRow(data[3], 4, idx === 3));
-      if (data.length > 4) {
-        rows.push({ rank: 0, player_name: '', score: 0, graze_count: 0, wave: 0, time_ms: 0, isEllipsis: true });
-      }
+  if (playerRank <= 3) {
+    // Player is in top 3, show one more entry if exists
+    if (dataPtr < data.length && rows.length < 4) {
+      rows.push(toRow(data[dataPtr], rows.length + 1));
+      dataPtr++;
+    }
+    if (dataPtr < data.length) {
+      rows.push({ ...ellipsis });
     }
   } else {
     // Player is beyond top 3
-    // Ellipsis between top 3 and player context
-    if (idx > 3) {
-      rows.push({ rank: 0, player_name: '', score: 0, graze_count: 0, wave: 0, time_ms: 0, isEllipsis: true });
+    if (playerRank > 4) {
+      rows.push({ ...ellipsis });
     }
-    // Previous entry
-    if (idx - 1 >= top3) {
-      rows.push(toRow(data[idx - 1], idx));
+    // Previous entry (the one just above player)
+    const prevOrigIdx = idx - 1;
+    if (prevOrigIdx >= 0 && getRank(prevOrigIdx) > top3End) {
+      rows.push(toRow(data[prevOrigIdx], playerRank - 1));
     }
     // Player
-    rows.push(toRow(data[idx], idx + 1, true));
-    // Next entry
-    if (idx + 1 < data.length) {
-      rows.push(toRow(data[idx + 1], idx + 2));
+    rows.push(playerRow);
+    // Next entry (the one just below player)
+    if (idx < data.length) {
+      rows.push(toRow(data[idx], playerRank + 1));
     }
     // Trailing ellipsis
-    if (idx + 2 < data.length) {
-      rows.push({ rank: 0, player_name: '', score: 0, graze_count: 0, wave: 0, time_ms: 0, isEllipsis: true });
+    if (idx + 1 < data.length) {
+      rows.push({ ...ellipsis });
     }
   }
 

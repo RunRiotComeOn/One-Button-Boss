@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import type { GameStats } from './GameScene';
 import { GameUI } from './GameUI';
-import { submitScore, fetchRankContext, type RankDisplayRow } from '../lib/supabase';
+import { submitScore } from '../lib/supabase';
 
 interface GameContainerProps {
   mode: 'normal' | 'endless';
@@ -134,8 +134,8 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
     setIsPaused(false);
   }, []);
 
-  const handleSubmitScore = useCallback(async (playerName: string): Promise<{ rows: RankDisplayRow[]; playerRank: number } | null> => {
-    const success = await submitScore({
+  const handleSubmitScore = useCallback(async (playerName: string): Promise<boolean> => {
+    return submitScore({
       player_name: playerName,
       mode,
       score: stats.score,
@@ -143,8 +143,6 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
       wave: waveRef.current,
       time_ms: Math.round(stats.time)
     });
-    if (!success) return null;
-    return fetchRankContext(mode, playerName);
   }, [mode, stats]);
 
   const handleUpgrade = useCallback((type: string) => {
@@ -217,12 +215,13 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
         onSubmitScore={handleSubmitScore}
         showHealEffect={showHealEffect}
         mode={mode}
+        wave={wave}
       />
       
-      {/* Wave Indicator - Top Right */}
+      {/* Wave Indicator - Top Right, left of pause button */}
       {!isGameOver && !isVictory && !showUpgrade && (
         <div
-          className="absolute top-4 right-4 bg-[#1a1a2e] border-2 border-[#ff00ff] px-3 py-2"
+          className="absolute top-4 right-16 bg-[#1a1a2e] border-2 border-[#ff00ff] px-3 py-2"
           style={{ boxShadow: '3px 3px 0 rgba(255, 0, 255, 0.3)', imageRendering: 'pixelated' }}
         >
           <p className="text-[10px] text-gray-400 uppercase tracking-wider">Wave</p>

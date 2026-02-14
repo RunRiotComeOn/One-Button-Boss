@@ -261,7 +261,7 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.wave = 1;
     this.healthDropCount = 0;
     this.healthDropTimer = 0;
-    this.healthDropInterval = 5000 + Math.random() * 5000;
+    this.healthDropInterval = 10000 + Math.random() * 5000;
     this.clearHealthDrops();
 
     // 重置升级系统
@@ -333,6 +333,12 @@ export class GameScene extends (window as any).Phaser.Scene {
       ease: 'Sine.easeInOut'
     });
 
+    // 8秒后自动消失，最后3秒闪烁
+    const lifetime = 8000;
+    const blinkStart = 5000;
+    (drop as any)._dropAge = 0;
+    (drop as any)._blinking = false;
+
     // 玩家碰撞
     this.physics.add.overlap(this.player.sprite, drop, () => {
       if (!drop.active) return;
@@ -371,8 +377,28 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.healthDropTimer += delta;
     if (this.healthDropTimer >= this.healthDropInterval) {
       this.healthDropTimer = 0;
-      this.healthDropInterval = 5000 + Math.random() * 5000;
+      this.healthDropInterval = 10000 + Math.random() * 5000;
       this.spawnHealthDrop();
+    }
+
+    // 更新每个水滴的生命周期
+    for (let i = this.healthDrops.length - 1; i >= 0; i--) {
+      const drop = this.healthDrops[i];
+      if (!drop || !drop.active) continue;
+      (drop as any)._dropAge += delta;
+      const age = (drop as any)._dropAge;
+
+      // 最后3秒闪烁
+      if (age >= 5000 && age < 8000) {
+        const blinkRate = age >= 7000 ? 100 : 200;
+        drop.setVisible(Math.floor(age / blinkRate) % 2 === 0);
+      }
+
+      // 8秒后消失
+      if (age >= 8000) {
+        drop.destroy();
+        this.healthDrops.splice(i, 1);
+      }
     }
   }
 
@@ -645,7 +671,7 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.clearHealthDrops();
     this.healthDropCount = 0;
     this.healthDropTimer = 0;
-    this.healthDropInterval = 5000 + Math.random() * 5000;
+    this.healthDropInterval = 10000 + Math.random() * 5000;
     this.pause();
 
     // 通知 UI
