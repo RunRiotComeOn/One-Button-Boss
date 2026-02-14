@@ -334,10 +334,7 @@ export class GameScene extends (window as any).Phaser.Scene {
     });
 
     // 8秒后自动消失，最后3秒闪烁
-    const lifetime = 8000;
-    const blinkStart = 5000;
     (drop as any)._dropAge = 0;
-    (drop as any)._blinking = false;
 
     // 玩家碰撞
     this.physics.add.overlap(this.player.sprite, drop, () => {
