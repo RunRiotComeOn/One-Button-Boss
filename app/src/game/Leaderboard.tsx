@@ -27,7 +27,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-8 relative overflow-hidden font-mono">
+    <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-4 relative overflow-hidden font-mono">
       {/* Pixel Grid Background */}
       <div
         className="absolute inset-0 opacity-30"
@@ -53,7 +53,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
         {/* Back Button */}
         <button
           onClick={onBackToMenu}
-          className="mb-6 px-4 py-2 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] transition-all duration-200 font-mono text-sm uppercase tracking-wider"
+          className="mb-3 px-3 py-1.5 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] transition-all duration-200 font-mono text-sm uppercase tracking-wider"
           style={{ boxShadow: '4px 4px 0 #00ffc8', imageRendering: 'pixelated' }}
         >
           &larr; BACK
@@ -61,7 +61,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
 
         {/* Title */}
         <h2
-          className="text-4xl font-bold mb-8 text-[#00ffc8] uppercase tracking-widest text-center"
+          className="text-3xl font-bold mb-4 text-[#00ffc8] uppercase tracking-widest text-center"
           style={{
             textShadow: '3px 3px 0 #ff0066, -1px -1px 0 #00ffff',
             fontFamily: '"Press Start 2P", monospace'
@@ -71,10 +71,10 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
         </h2>
 
         {/* Tabs */}
-        <div className="flex gap-4 mb-6 justify-center">
+        <div className="flex gap-3 mb-3 justify-center">
           <button
             onClick={() => setTab('normal')}
-            className={`px-6 py-3 border-2 text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
+            className={`px-5 py-2 border-2 text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
               tab === 'normal'
                 ? 'bg-[#00ffc8] text-[#0a0a0f] border-[#00ffc8]'
                 : 'bg-[#1a1a2e] text-[#00ffc8] border-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f]'
@@ -85,7 +85,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
           </button>
           <button
             onClick={() => setTab('endless')}
-            className={`px-6 py-3 border-2 text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
+            className={`px-5 py-2 border-2 text-xs font-bold uppercase tracking-widest transition-all duration-200 ${
               tab === 'endless'
                 ? 'bg-[#ff00ff] text-[#0a0a0f] border-[#ff00ff]'
                 : 'bg-[#1a1a2e] text-[#ff00ff] border-[#ff00ff] hover:bg-[#ff00ff] hover:text-[#0a0a0f]'
@@ -98,10 +98,10 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
 
         {/* Endless Sub-tabs */}
         {tab === 'endless' && (
-          <div className="flex gap-3 mb-4 justify-center">
+          <div className="flex gap-2 mb-3 justify-center">
             <button
               onClick={() => setEndlessSort('wave')}
-              className={`px-4 py-2 border text-[9px] font-bold uppercase tracking-widest transition-all duration-200 ${
+              className={`px-3 py-1.5 border text-[8px] font-bold uppercase tracking-widest transition-all duration-200 ${
                 endlessSort === 'wave'
                   ? 'bg-[#ff00ff] text-[#0a0a0f] border-[#ff00ff]'
                   : 'bg-transparent text-[#ff00ff] border-[#ff00ff]/50 hover:bg-[#ff00ff]/20'
@@ -112,7 +112,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
             </button>
             <button
               onClick={() => setEndlessSort('score')}
-              className={`px-4 py-2 border text-[9px] font-bold uppercase tracking-widest transition-all duration-200 ${
+              className={`px-3 py-1.5 border text-[8px] font-bold uppercase tracking-widest transition-all duration-200 ${
                 endlessSort === 'score'
                   ? 'bg-[#ff00ff] text-[#0a0a0f] border-[#ff00ff]'
                   : 'bg-transparent text-[#ff00ff] border-[#ff00ff]/50 hover:bg-[#ff00ff]/20'
@@ -126,7 +126,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
 
         {/* Table */}
         <div
-          className="bg-[#1a1a2e] border-2 p-6"
+          className="bg-[#1a1a2e] border-2 px-4 py-3"
           style={{
             borderColor: tab === 'normal' ? '#00ffc8' : '#ff00ff',
             boxShadow: `6px 6px 0 ${tab === 'normal' ? 'rgba(0, 255, 200, 0.3)' : 'rgba(255, 0, 255, 0.3)'}`,
@@ -135,14 +135,14 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
         >
           {loading ? (
             <p
-              className="text-center text-gray-400 py-8 text-xs uppercase tracking-wider"
+              className="text-center text-gray-400 py-6 text-xs uppercase tracking-wider"
               style={{ fontFamily: '"Press Start 2P", monospace' }}
             >
               LOADING...
             </p>
           ) : entries.length === 0 ? (
             <p
-              className="text-center text-gray-400 py-8 text-xs uppercase tracking-wider"
+              className="text-center text-gray-400 py-6 text-xs uppercase tracking-wider"
               style={{ fontFamily: '"Press Start 2P", monospace' }}
             >
               NO SCORES YET
@@ -151,18 +151,18 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
             <table className="w-full">
               <thead>
                 <tr className="text-gray-400 text-[10px] uppercase tracking-wider">
-                  <th className="text-left pb-4 pr-2">#</th>
-                  <th className="text-left pb-4">NAME</th>
+                  <th className="text-left pb-2 pr-2">#</th>
+                  <th className="text-left pb-2">NAME</th>
                   {tab === 'normal' ? (
                     <>
-                      <th className="text-right pb-4">SCORE</th>
-                      <th className="text-right pb-4">GRAZE</th>
+                      <th className="text-right pb-2">SCORE</th>
+                      <th className="text-right pb-2">GRAZE</th>
                     </>
                   ) : (
                     <>
-                      <th className="text-right pb-4">SCORE</th>
-                      <th className="text-right pb-4">WAVE</th>
-                      <th className="text-right pb-4">TIME</th>
+                      <th className="text-right pb-2">SCORE</th>
+                      <th className="text-right pb-2">WAVE</th>
+                      <th className="text-right pb-2">TIME</th>
                     </>
                   )}
                 </tr>
@@ -173,13 +173,13 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
                   return (
                     <tr key={entry.id} className="border-t border-gray-700/50">
                       <td
-                        className="py-3 pr-2 font-bold text-sm"
+                        className="py-1.5 pr-2 font-bold text-xs"
                         style={{ color: rankColor, fontFamily: '"Press Start 2P", monospace' }}
                       >
                         {i + 1}
                       </td>
                       <td
-                        className="py-3 text-white text-xs uppercase"
+                        className="py-1.5 text-white text-[10px] uppercase"
                         style={{ fontFamily: '"Press Start 2P", monospace' }}
                       >
                         {entry.player_name}
@@ -187,13 +187,13 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
                       {tab === 'normal' ? (
                         <>
                           <td
-                            className="py-3 text-right text-[#00ffc8] text-xs"
+                            className="py-1.5 text-right text-[#00ffc8] text-[10px]"
                             style={{ fontFamily: '"Press Start 2P", monospace' }}
                           >
                             {entry.score.toLocaleString()}
                           </td>
                           <td
-                            className="py-3 text-right text-[#ff00ff] text-xs"
+                            className="py-1.5 text-right text-[#ff00ff] text-[10px]"
                             style={{ fontFamily: '"Press Start 2P", monospace' }}
                           >
                             {entry.graze_count}
@@ -202,19 +202,19 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
                       ) : (
                         <>
                           <td
-                            className="py-3 text-right text-[#00ffc8] text-xs"
+                            className="py-1.5 text-right text-[#00ffc8] text-[10px]"
                             style={{ fontFamily: '"Press Start 2P", monospace' }}
                           >
                             {entry.score.toLocaleString()}
                           </td>
                           <td
-                            className="py-3 text-right text-[#ff00ff] text-xs"
+                            className="py-1.5 text-right text-[#ff00ff] text-[10px]"
                             style={{ fontFamily: '"Press Start 2P", monospace' }}
                           >
                             {entry.wave}
                           </td>
                           <td
-                            className="py-3 text-right text-[#ffff00] text-xs"
+                            className="py-1.5 text-right text-[#ffff00] text-[10px]"
                             style={{ fontFamily: '"Press Start 2P", monospace' }}
                           >
                             {formatTime(entry.time_ms)}

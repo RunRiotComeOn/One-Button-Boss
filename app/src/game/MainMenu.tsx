@@ -7,7 +7,85 @@ interface MainMenuProps {
 
 export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboard }) => {
   const [showInstructions, setShowInstructions] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
   const [hoveredMode, setHoveredMode] = useState<'normal' | 'endless' | null>(null);
+
+  if (showCredits) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center p-8 relative overflow-hidden font-mono">
+        {/* Pixel Grid Background */}
+        <div
+          className="absolute inset-0 opacity-30"
+          style={{
+            backgroundImage: `
+              linear-gradient(rgba(0, 255, 200, 0.15) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(0, 255, 200, 0.15) 1px, transparent 1px)
+            `,
+            backgroundSize: '8px 8px',
+            imageRendering: 'pixelated'
+          }}
+        />
+
+        {/* CRT Scanlines */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-20"
+          style={{
+            background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.3) 2px, rgba(0,0,0,0.3) 4px)'
+          }}
+        />
+
+        <div className="max-w-lg w-full relative z-10">
+          <button
+            onClick={() => setShowCredits(false)}
+            className="mb-6 px-4 py-2 bg-[#1a1a2e] border-2 border-[#00ffc8] text-[#00ffc8] hover:bg-[#00ffc8] hover:text-[#0a0a0f] transition-all duration-200 font-mono text-sm uppercase tracking-wider"
+            style={{ boxShadow: '4px 4px 0 #00ffc8', imageRendering: 'pixelated' }}
+          >
+            &larr; BACK
+          </button>
+
+          <h2
+            className="text-3xl font-bold mb-8 text-[#ffff00] uppercase tracking-widest text-center"
+            style={{
+              textShadow: '3px 3px 0 #ff0066, -1px -1px 0 #00ffff',
+              fontFamily: '"Press Start 2P", monospace'
+            }}
+          >
+            CREDITS
+          </h2>
+
+          <div
+            className="bg-[#1a1a2e] border-2 border-[#ffff00] p-8"
+            style={{ boxShadow: '6px 6px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
+          >
+            <p className="text-gray-300 text-sm leading-relaxed mb-6 font-mono text-center">
+              Special thanks to the following players for their testing, feedback, and suggestions that helped make this game better:
+            </p>
+
+            <div className="flex flex-col items-center gap-3 mb-6">
+              {['Sir King', 'Jerry', 'Timo'].map((name) => (
+                <span
+                  key={name}
+                  className="px-5 py-2 bg-[#0a0a0f] border-2 border-[#00ffc8] text-[#00ffc8] text-xs font-bold uppercase tracking-widest"
+                  style={{ fontFamily: '"Press Start 2P", monospace', boxShadow: '3px 3px 0 rgba(0, 255, 200, 0.4)' }}
+                >
+                  {name}
+                </span>
+              ))}
+            </div>
+
+            <p className="text-gray-500 text-xs font-mono text-center uppercase tracking-wider">
+              Your efforts made One Button Boss what it is today.
+            </p>
+          </div>
+        </div>
+
+        {/* CSS for font */}
+        <style>{`
+          @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+        `}</style>
+      </div>
+    );
+  }
 
   if (showInstructions) {
     return (
@@ -249,6 +327,15 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
       {/* Glow Corners */}
       <div className="absolute top-0 left-0 w-32 h-32 bg-[#00ffc8] opacity-10" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }} />
       <div className="absolute bottom-0 right-0 w-32 h-32 bg-[#ff0066] opacity-10" style={{ clipPath: 'polygon(100% 100%, 100% 0, 0 100%)' }} />
+
+      {/* Credits Button - Top Right */}
+      <button
+        onClick={() => setShowCredits(true)}
+        className="absolute top-4 right-4 z-20 px-3 py-2 bg-[#1a1a2e] border border-gray-600 text-gray-500 hover:text-[#ffff00] hover:border-[#ffff00] transition-all duration-200 font-mono text-[10px] uppercase tracking-wider"
+        style={{ imageRendering: 'pixelated' }}
+      >
+        CREDITS
+      </button>
       
       {/* Content */}
       <div className="relative z-10 text-center">

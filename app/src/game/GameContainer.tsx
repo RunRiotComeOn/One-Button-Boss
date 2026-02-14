@@ -214,6 +214,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
         onBackToMenu={onBackToMenu}
         onSubmitScore={handleSubmitScore}
         showHealEffect={showHealEffect}
+        mode={mode}
       />
       
       {/* Wave Indicator - Pixel Style */}

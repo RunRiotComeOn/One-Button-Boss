@@ -14,6 +14,7 @@ interface GameUIProps {
   onBackToMenu?: () => void;
   onSubmitScore?: (name: string) => Promise<boolean>;
   showHealEffect?: boolean;
+  mode?: 'normal' | 'endless';
 }
 
 const UPGRADES = [
@@ -35,7 +36,8 @@ export const GameUI: React.FC<GameUIProps> = ({
   onUpgrade,
   onBackToMenu,
   onSubmitScore,
-  showHealEffect
+  showHealEffect,
+  mode
 }) => {
   const [nickname, setNickname] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -252,8 +254,8 @@ export const GameUI: React.FC<GameUIProps> = ({
             </div>
           </div>
           
-          {/* Score Submission */}
-          {onSubmitScore && !submitted ? (
+          {/* Score Submission - only for endless mode on game over */}
+          {mode !== 'normal' && onSubmitScore && !submitted ? (
             <div
               className="bg-[#1a1a2e] border-2 border-[#ffff00] p-4 mb-6"
               style={{ boxShadow: '4px 4px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
@@ -281,7 +283,7 @@ export const GameUI: React.FC<GameUIProps> = ({
                 </button>
               </div>
             </div>
-          ) : submitted ? (
+          ) : mode !== 'normal' && submitted ? (
             <div className="mb-6 text-center">
               <p className="text-[#ffff00] text-xs uppercase tracking-wider" style={{ fontFamily: '"Press Start 2P", monospace' }}>
                 SCORE SUBMITTED!
