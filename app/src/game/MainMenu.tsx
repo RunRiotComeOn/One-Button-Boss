@@ -140,7 +140,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
                   <span className="text-[#ff00ff] font-bold">&gt;</span>
                   <div>
                     <strong className="text-[#ff00ff]">Upgrades</strong>
-                    <p className="text-xs text-gray-400">Choose a power-up between waves</p>
+                    <p className="text-xs text-gray-400">Choose a power-up between waves:</p>
+                    <p className="text-xs text-gray-500 mt-1">Dash CD -20% / Dash Dist +30% / Move Speed +20% / Life Steal</p>
                   </div>
                 </li>
               </ul>
