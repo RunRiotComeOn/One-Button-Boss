@@ -13,6 +13,7 @@ interface GameUIProps {
   onUpgrade: (type: string) => void;
   onBackToMenu?: () => void;
   onSubmitScore?: (name: string) => Promise<boolean>;
+  showHealEffect?: boolean;
 }
 
 const UPGRADES = [
@@ -33,7 +34,8 @@ export const GameUI: React.FC<GameUIProps> = ({
   showUpgrade,
   onUpgrade,
   onBackToMenu,
-  onSubmitScore
+  onSubmitScore,
+  showHealEffect
 }) => {
   const [nickname, setNickname] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -422,7 +424,7 @@ export const GameUI: React.FC<GameUIProps> = ({
         {/* Player Health */}
         <div className="flex items-end gap-3">
           {/* Player Health - Pixel Hearts */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 relative">
             <span className="text-xs text-gray-400 uppercase tracking-wider mr-2">HP</span>
             {[...Array(3)].map((_, i) => {
               const full = stats.health >= i + 1;
@@ -445,6 +447,23 @@ export const GameUI: React.FC<GameUIProps> = ({
                 />
               );
             })}
+            {showHealEffect && (
+              <span
+                className="absolute -top-6 left-1/2 -translate-x-1/2 text-[#00ff66] font-bold text-sm pointer-events-none"
+                style={{
+                  animation: 'healArrow 0.8s ease-out forwards',
+                  textShadow: '0 0 6px #00ff66, 0 0 12px #00ff66'
+                }}
+              >
+                +HP
+              </span>
+            )}
+            <style>{`
+              @keyframes healArrow {
+                0% { opacity: 1; transform: translateX(-50%) translateY(0); }
+                100% { opacity: 0; transform: translateX(-50%) translateY(-16px); }
+              }
+            `}</style>
           </div>
         </div>
         

@@ -28,6 +28,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
   const [isVictory, setIsVictory] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [showHealEffect, setShowHealEffect] = useState(false);
   const [wave, setWave] = useState(1);
   const waveRef = useRef(1);
 
@@ -92,6 +93,11 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
             } else {
               setShowUpgrade(true);
             }
+          };
+
+          scene.onHealEffect = () => {
+            setShowHealEffect(true);
+            setTimeout(() => setShowHealEffect(false), 800);
           };
         }
       }, 100);
@@ -207,6 +213,7 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
         onUpgrade={handleUpgrade}
         onBackToMenu={onBackToMenu}
         onSubmitScore={handleSubmitScore}
+        showHealEffect={showHealEffect}
       />
       
       {/* Wave Indicator - Pixel Style */}

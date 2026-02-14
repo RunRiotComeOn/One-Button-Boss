@@ -56,6 +56,7 @@ export class GameScene extends (window as any).Phaser.Scene {
   onStatsUpdate?: (stats: GameStats) => void;
   onGameOver?: (score: number, time: number) => void;
   onBossDefeated?: () => void;
+  onHealEffect?: () => void;
   
   // 音效
   sounds: { [key: string]: any } = {};
@@ -266,16 +267,30 @@ export class GameScene extends (window as any).Phaser.Scene {
 
   createHealthDropTexture() {
     const g = this.add.graphics();
-    // 水滴形状 - 绿色像素风
+    const p = 2; // pixel size
+    // 水滴形状 - 像素风 (9x12 grid, each cell = 2px)
     g.fillStyle(0x00ff66, 1);
-    g.fillRect(4, 0, 4, 2);   // 顶部
-    g.fillRect(2, 2, 8, 2);   // 上部
-    g.fillRect(2, 4, 8, 4);   // 中部
-    g.fillRect(4, 8, 4, 2);   // 底部
+    // 尖顶
+    g.fillRect(4 * p, 0 * p, 1 * p, 1 * p);
+    // 第2行
+    g.fillRect(3 * p, 1 * p, 3 * p, 1 * p);
+    // 第3行
+    g.fillRect(2 * p, 2 * p, 5 * p, 1 * p);
+    // 第4-6行 (宽体)
+    g.fillRect(1 * p, 3 * p, 7 * p, 1 * p);
+    g.fillRect(1 * p, 4 * p, 7 * p, 1 * p);
+    g.fillRect(1 * p, 5 * p, 7 * p, 1 * p);
+    // 第7行
+    g.fillRect(1 * p, 6 * p, 7 * p, 1 * p);
+    // 第8行
+    g.fillRect(2 * p, 7 * p, 5 * p, 1 * p);
+    // 第9行 (底部)
+    g.fillRect(3 * p, 8 * p, 3 * p, 1 * p);
     // 高光
-    g.fillStyle(0xaaffaa, 0.8);
-    g.fillRect(4, 2, 2, 2);
-    g.generateTexture('health-drop', 12, 10);
+    g.fillStyle(0xaaffcc, 0.7);
+    g.fillRect(3 * p, 2 * p, 1 * p, 1 * p);
+    g.fillRect(2 * p, 3 * p, 2 * p, 2 * p);
+    g.generateTexture('health-drop', 9 * p, 9 * p);
     g.destroy();
   }
 
@@ -283,15 +298,14 @@ export class GameScene extends (window as any).Phaser.Scene {
     const x = 60 + Math.random() * (this.scale.width - 120);
     const y = 60 + Math.random() * (this.scale.height - 120);
     const drop = this.physics.add.sprite(x, y, 'health-drop');
-    drop.setDisplaySize(16, 14);
-    drop.setSize(12, 10);
-    drop.setBlendMode((window as any).Phaser.BlendModes.ADD);
+    drop.setDisplaySize(24, 24);
+    drop.setSize(16, 16);
 
     // 浮动动画
     this.tweens.add({
       targets: drop,
-      y: y - 6,
-      duration: 800,
+      y: y - 8,
+      duration: 1000,
       yoyo: true,
       repeat: -1,
       ease: 'Sine.easeInOut'
@@ -302,6 +316,26 @@ export class GameScene extends (window as any).Phaser.Scene {
       if (!drop.active) return;
       this.player.heal(1);
       this.sound.play('graze', { volume: 0.5 });
+
+      // 拾取特效 - 绿色粒子向上飘散
+      const fx = this.add.graphics();
+      fx.fillStyle(0x00ff66, 0.8);
+      for (let i = 0; i < 6; i++) {
+        const px = drop.x - 4 + Math.random() * 8;
+        const py = drop.y - 4 + Math.random() * 8;
+        fx.fillRect(px, py, 4, 4);
+      }
+      this.tweens.add({
+        targets: fx,
+        alpha: 0,
+        y: '-=20',
+        duration: 400,
+        onComplete: () => fx.destroy()
+      });
+
+      // 通知 UI 显示回血特效
+      this.onHealEffect?.();
+
       drop.destroy();
       this.healthDrops = this.healthDrops.filter(d => d !== drop);
     }, null as any, this);
