@@ -77,6 +77,10 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
               Your efforts made One Button Boss what it is today.
             </p>
           </div>
+
+          <p className="text-gray-600 text-[9px] font-mono text-center mt-6 uppercase tracking-wider">
+            All rights reserved. Final interpretation belongs to Yixu Huang.
+          </p>
         </div>
 
         {/* CSS for font */}
