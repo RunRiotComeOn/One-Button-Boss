@@ -361,63 +361,64 @@ export const GameUI: React.FC<GameUIProps> = ({
 
   return (
     <>
-      {/* Top HUD - Pixel Style */}
-      <div className="absolute top-0 left-0 right-0 p-4 flex justify-between items-start pointer-events-none font-mono">
-        {/* Score & Time */}
-        <div className="flex gap-4">
-          <div 
-            className="bg-[#1a1a2e]/90 border-2 border-[#00ffc8] px-3 py-2"
-            style={{ boxShadow: '3px 3px 0 rgba(0, 255, 200, 0.3)', imageRendering: 'pixelated' }}
-          >
-            <p className="text-[10px] text-gray-400 uppercase tracking-wider">Score</p>
-            <p className="text-lg font-bold text-[#00ffc8]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-              {stats.score.toLocaleString()}
-            </p>
-          </div>
-          <div 
-            className="bg-[#1a1a2e]/90 border-2 border-[#ffff00] px-3 py-2"
-            style={{ boxShadow: '3px 3px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
-          >
-            <p className="text-[10px] text-gray-400 uppercase tracking-wider">Time</p>
-            <p className="text-lg font-bold text-[#ffff00]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-              {formatTime(stats.time)}
-            </p>
-          </div>
-          <div 
-            className="bg-[#1a1a2e]/90 border-2 border-[#ff00ff] px-3 py-2"
-            style={{ boxShadow: '3px 3px 0 rgba(255, 0, 255, 0.3)', imageRendering: 'pixelated' }}
-          >
-            <p className="text-[10px] text-gray-400 uppercase tracking-wider">Graze</p>
-            <p className="text-lg font-bold text-[#ff00ff]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-              {stats.grazeCount}
-            </p>
-          </div>
-        </div>
-        
-        {/* Boss Info */}
-        <div 
-          className="bg-[#1a1a2e]/90 border-2 border-gray-600 px-3 py-2"
+      {/* Boss Health Bar - Top Center */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 pointer-events-none font-mono z-10">
+        <div
+          className="bg-[#1a1a2e]/90 border-2 border-gray-600 px-4 py-2"
           style={{ boxShadow: '3px 3px 0 rgba(0,0,0,0.5)', imageRendering: 'pixelated' }}
         >
-          <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-1">Boss</p>
-          <p 
-            className="text-xs font-bold uppercase"
-            style={{ color: getPhaseColor(stats.bossPhase), fontFamily: '"Press Start 2P", monospace' }}
-          >
-            {getPhaseName(stats.bossPhase)}
-          </p>
-          <div 
-            className="w-40 h-3 bg-[#0a0a0f] border border-gray-600 mt-1 overflow-hidden"
+          <div className="flex items-center justify-between mb-1 gap-4">
+            <p className="text-[10px] text-gray-400 uppercase tracking-wider">Boss</p>
+            <p
+              className="text-xs font-bold uppercase"
+              style={{ color: getPhaseColor(stats.bossPhase), fontFamily: '"Press Start 2P", monospace' }}
+            >
+              {getPhaseName(stats.bossPhase)}
+            </p>
+          </div>
+          <div
+            className="w-64 h-4 bg-[#0a0a0f] border border-gray-600 overflow-hidden"
             style={{ imageRendering: 'pixelated' }}
           >
-            <div 
+            <div
               className="h-full transition-all duration-300"
-              style={{ 
+              style={{
                 width: `${Math.max(0, stats.bossHealth)}%`,
                 backgroundColor: getPhaseColor(stats.bossPhase)
               }}
             />
           </div>
+        </div>
+      </div>
+
+      {/* Top Left HUD - Score & Time & Graze */}
+      <div className="absolute top-4 left-4 flex gap-3 pointer-events-none font-mono">
+        <div
+          className="bg-[#1a1a2e]/90 border-2 border-[#00ffc8] px-3 py-2"
+          style={{ boxShadow: '3px 3px 0 rgba(0, 255, 200, 0.3)', imageRendering: 'pixelated' }}
+        >
+          <p className="text-[10px] text-gray-400 uppercase tracking-wider">Score</p>
+          <p className="text-lg font-bold text-[#00ffc8]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+            {stats.score.toLocaleString()}
+          </p>
+        </div>
+        <div
+          className="bg-[#1a1a2e]/90 border-2 border-[#ffff00] px-3 py-2"
+          style={{ boxShadow: '3px 3px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
+        >
+          <p className="text-[10px] text-gray-400 uppercase tracking-wider">Time</p>
+          <p className="text-lg font-bold text-[#ffff00]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+            {formatTime(stats.time)}
+          </p>
+        </div>
+        <div
+          className="bg-[#1a1a2e]/90 border-2 border-[#ff00ff] px-3 py-2"
+          style={{ boxShadow: '3px 3px 0 rgba(255, 0, 255, 0.3)', imageRendering: 'pixelated' }}
+        >
+          <p className="text-[10px] text-gray-400 uppercase tracking-wider">Graze</p>
+          <p className="text-lg font-bold text-[#ff00ff]" style={{ fontFamily: '"Press Start 2P", monospace' }}>
+            {stats.grazeCount}
+          </p>
         </div>
       </div>
       
@@ -479,10 +480,10 @@ export const GameUI: React.FC<GameUIProps> = ({
         </div>
       </div>
       
-      {/* Pause Button - Pixel */}
+      {/* Pause Button - Top Right */}
       <button
         onClick={onPause}
-        className="absolute top-4 right-4 w-10 h-10 bg-[#1a1a2e] border-2 border-gray-600 hover:border-[#00ffc8] flex items-center justify-center transition-all duration-200"
+        className="absolute top-16 right-4 w-10 h-10 bg-[#1a1a2e] border-2 border-gray-600 hover:border-[#00ffc8] flex items-center justify-center transition-all duration-200"
         style={{ boxShadow: '3px 3px 0 #333', imageRendering: 'pixelated' }}
       >
         <div className="flex gap-1">

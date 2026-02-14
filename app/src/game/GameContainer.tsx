@@ -217,14 +217,14 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
         mode={mode}
       />
       
-      {/* Wave Indicator - Pixel Style */}
+      {/* Wave Indicator - Top Right */}
       {!isGameOver && !isVictory && !showUpgrade && (
-        <div 
-          className="absolute top-4 left-1/2 -translate-x-1/2 bg-[#1a1a2e] border-2 border-[#ff00ff] px-3 py-2"
+        <div
+          className="absolute top-4 right-4 bg-[#1a1a2e] border-2 border-[#ff00ff] px-3 py-2"
           style={{ boxShadow: '3px 3px 0 rgba(255, 0, 255, 0.3)', imageRendering: 'pixelated' }}
         >
           <p className="text-[10px] text-gray-400 uppercase tracking-wider">Wave</p>
-          <p 
+          <p
             className="text-lg font-bold text-[#ff00ff]"
             style={{ fontFamily: '"Press Start 2P", monospace' }}
           >

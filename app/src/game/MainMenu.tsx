@@ -62,7 +62,7 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
             </p>
 
             <div className="flex flex-col items-center gap-3 mb-6">
-              {['Sir King', 'Jerry', 'Timo'].map((name) => (
+              {['Sir King', 'Miss Forit', 'Jerry', 'Timo'].map((name) => (
                 <span
                   key={name}
                   className="px-5 py-2 bg-[#0a0a0f] border-2 border-[#00ffc8] text-[#00ffc8] text-xs font-bold uppercase tracking-widest"
