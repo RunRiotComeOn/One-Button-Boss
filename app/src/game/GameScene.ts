@@ -38,6 +38,12 @@ export class GameScene extends (window as any).Phaser.Scene {
   slowMotionActive: boolean = false;
   slowMotionTimer: number = 0;
   
+  // 回血水滴
+  healthDrops: any[] = [];
+  healthDropCount: number = 0;
+  healthDropTimer: number = 0;
+  healthDropInterval: number = 0;
+
   // 升级系统
   upgrades = {
     dashCooldownReduction: 0,
@@ -149,9 +155,12 @@ export class GameScene extends (window as any).Phaser.Scene {
       this.bulletPool
     );
 
+    // 创建回血水滴纹理
+    this.createHealthDropTexture();
+
     // 设置碰撞
     this.setupCollisions();
-    
+
     // 重置状态
     this.resetGame();
     
@@ -249,6 +258,73 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.slowMotionActive = false;
     this.slowMotionTimer = 0;
     this.wave = 1;
+    this.healthDropCount = 0;
+    this.healthDropTimer = 0;
+    this.healthDropInterval = 5000 + Math.random() * 5000;
+    this.clearHealthDrops();
+  }
+
+  createHealthDropTexture() {
+    const g = this.add.graphics();
+    // 水滴形状 - 绿色像素风
+    g.fillStyle(0x00ff66, 1);
+    g.fillRect(4, 0, 4, 2);   // 顶部
+    g.fillRect(2, 2, 8, 2);   // 上部
+    g.fillRect(2, 4, 8, 4);   // 中部
+    g.fillRect(4, 8, 4, 2);   // 底部
+    // 高光
+    g.fillStyle(0xaaffaa, 0.8);
+    g.fillRect(4, 2, 2, 2);
+    g.generateTexture('health-drop', 12, 10);
+    g.destroy();
+  }
+
+  spawnHealthDrop() {
+    const x = 60 + Math.random() * (this.scale.width - 120);
+    const y = 60 + Math.random() * (this.scale.height - 120);
+    const drop = this.physics.add.sprite(x, y, 'health-drop');
+    drop.setDisplaySize(16, 14);
+    drop.setSize(12, 10);
+    drop.setBlendMode((window as any).Phaser.BlendModes.ADD);
+
+    // 浮动动画
+    this.tweens.add({
+      targets: drop,
+      y: y - 6,
+      duration: 800,
+      yoyo: true,
+      repeat: -1,
+      ease: 'Sine.easeInOut'
+    });
+
+    // 玩家碰撞
+    this.physics.add.overlap(this.player.sprite, drop, () => {
+      if (!drop.active) return;
+      this.player.heal(1);
+      this.sound.play('graze', { volume: 0.5 });
+      drop.destroy();
+      this.healthDrops = this.healthDrops.filter(d => d !== drop);
+    }, null as any, this);
+
+    this.healthDrops.push(drop);
+    this.healthDropCount++;
+  }
+
+  updateHealthDrops(delta: number) {
+    if (this.wave < 2 || this.healthDropCount >= 3) return;
+    this.healthDropTimer += delta;
+    if (this.healthDropTimer >= this.healthDropInterval) {
+      this.healthDropTimer = 0;
+      this.healthDropInterval = 5000 + Math.random() * 5000;
+      this.spawnHealthDrop();
+    }
+  }
+
+  clearHealthDrops() {
+    for (const drop of this.healthDrops) {
+      if (drop && drop.active) drop.destroy();
+    }
+    this.healthDrops = [];
   }
   
   update(time: number, delta: number) {
@@ -287,7 +363,10 @@ export class GameScene extends (window as any).Phaser.Scene {
 
     // 检查擦弹
     this.checkGraze();
-    
+
+    // 更新回血水滴
+    this.updateHealthDrops(adjustedDelta);
+
     // 更新 UI
     this.updateStats();
   }
@@ -505,8 +584,12 @@ export class GameScene extends (window as any).Phaser.Scene {
     // 得分奖励
     this.score += 5000;
 
-    // 清除所有子弹并暂停游戏
+    // 清除所有子弹和水滴并暂停游戏
     this.bulletPool.clear();
+    this.clearHealthDrops();
+    this.healthDropCount = 0;
+    this.healthDropTimer = 0;
+    this.healthDropInterval = 5000 + Math.random() * 5000;
     this.pause();
 
     // 通知 UI
