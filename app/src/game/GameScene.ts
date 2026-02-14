@@ -263,6 +263,14 @@ export class GameScene extends (window as any).Phaser.Scene {
     this.healthDropTimer = 0;
     this.healthDropInterval = 5000 + Math.random() * 5000;
     this.clearHealthDrops();
+
+    // 重置升级系统
+    this.upgrades = {
+      dashCooldownReduction: 0,
+      dashDistanceIncrease: 0,
+      grazeScoreMultiplier: 1,
+      lifeSteal: false
+    };
   }
 
   createHealthDropTexture() {
