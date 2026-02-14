@@ -267,44 +267,44 @@ export class GameScene extends (window as any).Phaser.Scene {
 
   createHealthDropTexture() {
     const g = this.add.graphics();
-    const p = 2; // pixel size
-    // 水滴形状 - 尖顶，肚子偏下，底部圆润
-    g.fillStyle(0x00cc55, 1);
-    // row 0: 尖顶 1px
-    g.fillRect(4 * p, 0, 1 * p, p);
-    // row 1: 3px
-    g.fillRect(3 * p, 1 * p, 3 * p, p);
-    // row 2: 3px
-    g.fillRect(3 * p, 2 * p, 3 * p, p);
-    // row 3: 5px
-    g.fillRect(2 * p, 3 * p, 5 * p, p);
-    // row 4: 5px
-    g.fillRect(2 * p, 4 * p, 5 * p, p);
-    // row 5: 7px (开始变宽)
-    g.fillRect(1 * p, 5 * p, 7 * p, p);
-    // row 6-8: 9px (最宽 - 肚子)
-    g.fillRect(0, 6 * p, 8 * p, p);
-    g.fillRect(0, 7 * p, 8 * p, p);
-    g.fillRect(0, 8 * p, 8 * p, p);
-    // row 9: 7px
-    g.fillRect(1 * p, 9 * p, 7 * p, p);
-    // row 10: 5px
-    g.fillRect(2 * p, 10 * p, 5 * p, p);
-    // row 11: 3px (底部收圆)
-    g.fillRect(3 * p, 11 * p, 3 * p, p);
+    const p = 3; // pixel size
+    const W = 9, H = 13;
 
-    // 光泽高光 - 左上亮斑
-    g.fillStyle(0xaaffcc, 0.6);
-    g.fillRect(3 * p, 3 * p, 1 * p, p);
-    g.fillRect(2 * p, 5 * p, 1 * p, p);
-    g.fillRect(2 * p, 6 * p, 2 * p, p);
-    g.fillRect(2 * p, 7 * p, 1 * p, p);
-    // 白色高光点
-    g.fillStyle(0xffffff, 0.5);
-    g.fillRect(3 * p, 4 * p, 1 * p, p);
-    g.fillRect(2 * p, 6 * p, 1 * p, p);
+    // 二维数组定义水滴 (0=空 1=深轮廓 2=主体 3=亮面 4=高光)
+    const shape = [
+      [0,0,0,0,1,0,0,0,0],
+      [0,0,0,1,2,1,0,0,0],
+      [0,0,1,3,2,2,1,0,0],
+      [0,0,1,3,2,2,1,0,0],
+      [0,1,3,4,2,2,2,1,0],
+      [0,1,3,3,2,2,2,1,0],
+      [1,3,3,2,2,2,2,2,1],
+      [1,3,2,2,2,2,2,2,1],
+      [1,3,2,2,2,2,2,2,1],
+      [1,2,2,2,2,2,2,2,1],
+      [0,1,2,2,2,2,2,1,0],
+      [0,0,1,2,2,2,1,0,0],
+      [0,0,0,1,1,1,0,0,0],
+    ];
 
-    g.generateTexture('health-drop', 9 * p, 12 * p);
+    const colors: [number, number][] = [
+      [0, 0],            // 0: empty
+      [0x006633, 1],     // 1: dark outline
+      [0x00bb44, 1],     // 2: body
+      [0x55eeaa, 1],     // 3: light side
+      [0xccffdd, 0.9],   // 4: glint
+    ];
+
+    for (let r = 0; r < H; r++) {
+      for (let c = 0; c < W; c++) {
+        const v = shape[r][c];
+        if (v === 0) continue;
+        g.fillStyle(colors[v][0], colors[v][1]);
+        g.fillRect(c * p, r * p, p, p);
+      }
+    }
+
+    g.generateTexture('health-drop', W * p, H * p);
     g.destroy();
   }
 
@@ -312,8 +312,8 @@ export class GameScene extends (window as any).Phaser.Scene {
     const x = 60 + Math.random() * (this.scale.width - 120);
     const y = 60 + Math.random() * (this.scale.height - 120);
     const drop = this.physics.add.sprite(x, y, 'health-drop');
-    drop.setDisplaySize(24, 24);
-    drop.setSize(16, 16);
+    drop.setDisplaySize(27, 39);
+    drop.setSize(20, 28);
 
     // 浮动动画
     this.tweens.add({
