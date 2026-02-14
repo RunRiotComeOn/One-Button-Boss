@@ -1,5 +1,11 @@
 import { useState } from 'react';
 import type { GameStats } from './GameScene';
+import type { RankDisplayRow } from '../lib/supabase';
+
+interface RankContext {
+  rows: RankDisplayRow[];
+  playerRank: number;
+}
 
 interface GameUIProps {
   stats: GameStats;
@@ -12,7 +18,7 @@ interface GameUIProps {
   showUpgrade: boolean;
   onUpgrade: (type: string) => void;
   onBackToMenu?: () => void;
-  onSubmitScore?: (name: string) => Promise<boolean>;
+  onSubmitScore?: (name: string) => Promise<RankContext | null>;
   showHealEffect?: boolean;
   mode?: 'normal' | 'endless';
 }
@@ -42,13 +48,80 @@ export const GameUI: React.FC<GameUIProps> = ({
   const [nickname, setNickname] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [rankContext, setRankContext] = useState<RankContext | null>(null);
 
   const handleSubmit = async () => {
     if (!nickname.trim() || !onSubmitScore || submitting) return;
     setSubmitting(true);
-    const success = await onSubmitScore(nickname.trim());
-    if (success) setSubmitted(true);
+    const result = await onSubmitScore(nickname.trim());
+    if (result) {
+      setRankContext(result);
+      setSubmitted(true);
+    }
     setSubmitting(false);
+  };
+
+  const renderRankContext = () => {
+    if (!rankContext) return null;
+    const isEndless = mode !== 'normal';
+    return (
+      <div
+        className="bg-[#1a1a2e] border-2 border-[#ffff00] p-4 mb-6"
+        style={{ boxShadow: '4px 4px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated' }}
+      >
+        <p className="text-[10px] text-gray-400 uppercase tracking-wider mb-3 text-center">
+          YOU PLACED <span className="text-[#ffff00]">#{rankContext.playerRank}</span>
+        </p>
+        <table className="w-full">
+          <tbody>
+            {rankContext.rows.map((row, i) => {
+              if (row.isEllipsis) {
+                return (
+                  <tr key={`ellipsis-${i}`}>
+                    <td colSpan={4} className="py-1 text-center text-gray-500 text-xs">...</td>
+                  </tr>
+                );
+              }
+              const isYou = row.isPlayer;
+              const rankColor = row.rank === 1 ? '#ffff00' : row.rank === 2 ? '#c0c0c0' : row.rank === 3 ? '#cd7f32' : '#ffffff';
+              return (
+                <tr
+                  key={row.rank}
+                  className={`border-t border-gray-700/50 ${isYou ? 'bg-[#ffff00]/10' : ''}`}
+                >
+                  <td
+                    className="py-1.5 pr-2 font-bold text-[10px] w-8"
+                    style={{ color: isYou ? '#ffff00' : rankColor, fontFamily: '"Press Start 2P", monospace' }}
+                  >
+                    {row.rank}
+                  </td>
+                  <td
+                    className={`py-1.5 text-[10px] uppercase ${isYou ? 'text-[#ffff00] font-bold' : 'text-white'}`}
+                    style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  >
+                    {isYou ? 'YOU' : row.player_name}
+                  </td>
+                  <td
+                    className="py-1.5 text-right text-[#00ffc8] text-[10px]"
+                    style={{ fontFamily: '"Press Start 2P", monospace' }}
+                  >
+                    {row.score.toLocaleString()}
+                  </td>
+                  {isEndless && (
+                    <td
+                      className="py-1.5 text-right text-[#ff00ff] text-[10px] pl-2"
+                      style={{ fontFamily: '"Press Start 2P", monospace' }}
+                    >
+                      W{row.wave}
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    );
   };
 
   const formatTime = (ms: number) => {
@@ -142,11 +215,7 @@ export const GameUI: React.FC<GameUIProps> = ({
               </div>
             </div>
           ) : submitted ? (
-            <div className="mb-6 text-center">
-              <p className="text-[#ffff00] text-xs uppercase tracking-wider" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-                SCORE SUBMITTED!
-              </p>
-            </div>
+            renderRankContext()
           ) : null}
 
           <div className="flex flex-col gap-4">
@@ -284,11 +353,7 @@ export const GameUI: React.FC<GameUIProps> = ({
               </div>
             </div>
           ) : mode !== 'normal' && submitted ? (
-            <div className="mb-6 text-center">
-              <p className="text-[#ffff00] text-xs uppercase tracking-wider" style={{ fontFamily: '"Press Start 2P", monospace' }}>
-                SCORE SUBMITTED!
-              </p>
-            </div>
+            renderRankContext()
           ) : null}
 
           <div className="flex flex-col gap-4">

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import type { GameStats } from './GameScene';
 import { GameUI } from './GameUI';
-import { submitScore } from '../lib/supabase';
+import { submitScore, fetchRankContext, type RankDisplayRow } from '../lib/supabase';
 
 interface GameContainerProps {
   mode: 'normal' | 'endless';
@@ -134,8 +134,8 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
     setIsPaused(false);
   }, []);
 
-  const handleSubmitScore = useCallback(async (playerName: string): Promise<boolean> => {
-    return submitScore({
+  const handleSubmitScore = useCallback(async (playerName: string): Promise<{ rows: RankDisplayRow[]; playerRank: number } | null> => {
+    const success = await submitScore({
       player_name: playerName,
       mode,
       score: stats.score,
@@ -143,6 +143,8 @@ export const GameContainer: React.FC<GameContainerProps> = ({ mode, onBackToMenu
       wave: waveRef.current,
       time_ms: Math.round(stats.time)
     });
+    if (!success) return null;
+    return fetchRankContext(mode, playerName);
   }, [mode, stats]);
 
   const handleUpgrade = useCallback((type: string) => {

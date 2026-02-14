@@ -331,8 +331,8 @@ export const MainMenu: React.FC<MainMenuProps> = ({ onStartGame, onShowLeaderboa
       {/* Credits Button - Top Right */}
       <button
         onClick={() => setShowCredits(true)}
-        className="absolute top-4 right-4 z-20 px-3 py-2 bg-[#1a1a2e] border border-gray-600 text-gray-500 hover:text-[#ffff00] hover:border-[#ffff00] transition-all duration-200 font-mono text-[10px] uppercase tracking-wider"
-        style={{ imageRendering: 'pixelated' }}
+        className="absolute top-4 right-4 z-20 px-4 py-2.5 bg-[#1a1a2e] border-2 border-[#ffff00] text-[#ffff00] hover:bg-[#ffff00] hover:text-[#0a0a0f] transition-all duration-200 font-mono text-xs uppercase tracking-wider"
+        style={{ boxShadow: '3px 3px 0 rgba(255, 255, 0, 0.3)', imageRendering: 'pixelated', fontFamily: '"Press Start 2P", monospace' }}
       >
         CREDITS
       </button>
