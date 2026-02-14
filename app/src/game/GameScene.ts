@@ -283,9 +283,9 @@ export class GameScene extends (window as any).Phaser.Scene {
     // row 5: 7px (开始变宽)
     g.fillRect(1 * p, 5 * p, 7 * p, p);
     // row 6-8: 9px (最宽 - 肚子)
-    g.fillRect(0, 6 * p, 9 * p, p);
-    g.fillRect(0, 7 * p, 9 * p, p);
-    g.fillRect(0, 8 * p, 9 * p, p);
+    g.fillRect(0, 6 * p, 8 * p, p);
+    g.fillRect(0, 7 * p, 8 * p, p);
+    g.fillRect(0, 8 * p, 8 * p, p);
     // row 9: 7px
     g.fillRect(1 * p, 9 * p, 7 * p, p);
     // row 10: 5px
