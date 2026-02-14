@@ -7,16 +7,18 @@ interface LeaderboardProps {
 
 export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
   const [tab, setTab] = useState<'normal' | 'endless'>('normal');
+  const [endlessSort, setEndlessSort] = useState<'wave' | 'score'>('wave');
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    fetchLeaderboard(tab).then((data) => {
+    const orderBy = tab === 'endless' ? endlessSort : undefined;
+    fetchLeaderboard(tab, orderBy).then((data) => {
       setEntries(data);
       setLoading(false);
     });
-  }, [tab]);
+  }, [tab, endlessSort]);
 
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
@@ -94,6 +96,34 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
           </button>
         </div>
 
+        {/* Endless Sub-tabs */}
+        {tab === 'endless' && (
+          <div className="flex gap-3 mb-4 justify-center">
+            <button
+              onClick={() => setEndlessSort('wave')}
+              className={`px-4 py-2 border text-[9px] font-bold uppercase tracking-widest transition-all duration-200 ${
+                endlessSort === 'wave'
+                  ? 'bg-[#ff00ff] text-[#0a0a0f] border-[#ff00ff]'
+                  : 'bg-transparent text-[#ff00ff] border-[#ff00ff]/50 hover:bg-[#ff00ff]/20'
+              }`}
+              style={{ fontFamily: '"Press Start 2P", monospace' }}
+            >
+              BY WAVE
+            </button>
+            <button
+              onClick={() => setEndlessSort('score')}
+              className={`px-4 py-2 border text-[9px] font-bold uppercase tracking-widest transition-all duration-200 ${
+                endlessSort === 'score'
+                  ? 'bg-[#ff00ff] text-[#0a0a0f] border-[#ff00ff]'
+                  : 'bg-transparent text-[#ff00ff] border-[#ff00ff]/50 hover:bg-[#ff00ff]/20'
+              }`}
+              style={{ fontFamily: '"Press Start 2P", monospace' }}
+            >
+              BY SCORE
+            </button>
+          </div>
+        )}
+
         {/* Table */}
         <div
           className="bg-[#1a1a2e] border-2 p-6"
@@ -130,6 +160,7 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
                     </>
                   ) : (
                     <>
+                      <th className="text-right pb-4">SCORE</th>
                       <th className="text-right pb-4">WAVE</th>
                       <th className="text-right pb-4">TIME</th>
                     </>
@@ -170,6 +201,12 @@ export const Leaderboard: React.FC<LeaderboardProps> = ({ onBackToMenu }) => {
                         </>
                       ) : (
                         <>
+                          <td
+                            className="py-3 text-right text-[#00ffc8] text-xs"
+                            style={{ fontFamily: '"Press Start 2P", monospace' }}
+                          >
+                            {entry.score.toLocaleString()}
+                          </td>
                           <td
                             className="py-3 text-right text-[#ff00ff] text-xs"
                             style={{ fontFamily: '"Press Start 2P", monospace' }}
