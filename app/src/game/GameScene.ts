@@ -542,8 +542,8 @@ export class GameScene extends (window as any).Phaser.Scene {
       case 'dash-distance':
         this.player.dashSpeed *= 1.3;
         break;
-      case 'graze-score':
-        this.upgrades.grazeScoreMultiplier *= 2;
+      case 'speed-up':
+        this.player.speed *= 1.2;
         break;
       case 'life-steal':
         this.upgrades.lifeSteal = true;

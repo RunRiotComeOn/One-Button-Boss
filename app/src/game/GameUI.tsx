@@ -18,7 +18,7 @@ interface GameUIProps {
 const UPGRADES = [
   { id: 'dash-cooldown', name: 'DASH SPD', description: 'Cooldown -20%', icon: '⚡' },
   { id: 'dash-distance', name: 'DASH DST', description: 'Distance +30%', icon: '🚀' },
-  { id: 'graze-score', name: 'GRAZE X2', description: 'Score x2', icon: '✨' },
+  { id: 'speed-up', name: 'SPEED UP', description: 'Move +20%', icon: '>' },
   { id: 'life-steal', name: 'LIFE STEAL', description: 'Heal on hit', icon: '💚' }
 ];
 
