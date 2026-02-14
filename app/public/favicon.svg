@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" shape-rendering="crispEdges">
+  <!-- Background -->
+  <rect width="64" height="64" fill="#330011"/>
+  <!-- Glow border -->
+  <rect x="4" y="4" width="4" height="56" fill="#ff00ff" opacity="0.5"/>
+  <rect x="56" y="4" width="4" height="56" fill="#ff00ff" opacity="0.5"/>
+  <rect x="4" y="4" width="56" height="4" fill="#ff00ff" opacity="0.5"/>
+  <rect x="4" y="56" width="56" height="4" fill="#ff00ff" opacity="0.5"/>
+  <!-- Top horns -->
+  <rect x="8" y="8" width="8" height="8" fill="#ff0066"/>
+  <rect x="48" y="8" width="8" height="8" fill="#ff0066"/>
+  <!-- Forehead -->
+  <rect x="16" y="12" width="32" height="8" fill="#ff0066"/>
+  <!-- Eye sockets -->
+  <rect x="8" y="24" width="16" height="12" fill="#ff0066"/>
+  <rect x="40" y="24" width="16" height="12" fill="#ff0066"/>
+  <!-- Eyes glow -->
+  <rect x="12" y="28" width="8" height="4" fill="#ffff00"/>
+  <rect x="44" y="28" width="8" height="4" fill="#ffff00"/>
+  <!-- Nose -->
+  <rect x="28" y="32" width="8" height="8" fill="#ff0066"/>
+  <!-- Mouth -->
+  <rect x="16" y="44" width="32" height="8" fill="#ff0066"/>
+  <rect x="12" y="48" width="8" height="8" fill="#ff0066"/>
+  <rect x="44" y="48" width="8" height="8" fill="#ff0066"/>
+  <!-- Chin -->
+  <rect x="20" y="52" width="24" height="8" fill="#ff0066"/>
+</svg>
